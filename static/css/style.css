@@ -1,0 +1,417 @@
+body{
+    background-color: #f8f9fa !important;
+    font-family: Arial, sans-serif !important;
+    color: #006273 !important;
+}
+
+h1,h2,h3,h4,h5,h6{
+    color: #006273 !important;
+}
+
+p{
+    color: #006273 !important;
+}
+
+span, div, a, li, td, th{
+    color: #006273 !important;
+}
+
+
+.card{
+    border: none;
+}
+
+.card-header{
+    background-color: #B7D4D8;
+    border: none;
+}
+
+.card-body{
+    background-color: #DBEEF0;
+}
+
+.icon-circle{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;        /* circle size */
+    height: 40px;
+    border-radius: 50%; /* makes it a circle */
+    border:none;
+    background-color: #B7D4D8; /* light background */
+    color: #5f5f5f;     /* icon color */
+    font-size: 18px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+.icon-circle:hover{
+    background-color: #c3dfe2;
+    transition: 0.3s;
+}
+
+
+.custom-input {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      padding: 9px;
+      border-bottom: 1px solid #2e7d82;
+      margin-bottom: 20px;
+    }
+    
+    .custom-input input {
+      border: none;
+      background: none;
+      width: 100%;
+      font-size: 16px;
+      outline: none;
+      color: #2e7d82;
+    }
+    
+    .custom-input label {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      color: #2e7d82;
+      pointer-events: none;
+      transition: 0.2s ease all;
+      font-size: 16px; /* Default larger size */
+    }
+    
+    .custom-input input:focus + label,
+    .custom-input input:not(:placeholder-shown) + label {
+      top: 0;
+      font-size: 12px; /* Smaller size when focused or filled */
+    }
+    
+    .custom-input::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: #2e7d82;
+      transition: width 0.3s ease;
+    }
+    
+    .custom-input input:focus ~ ::after {
+      width: 100%;
+    }
+
+
+
+.custom-select {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      padding: 10px 10px 10px 10px;
+      border-bottom: 1px solid #2e7d82;
+      margin-bottom: 20px;
+    }
+
+    /* ----- the native <select> ----- */
+    .custom-select select {
+      width: 100%;
+      border: none;
+      background: none;
+      font-size: 16px;
+      outline: none;
+      color: #2e7d82;
+      appearance: none;    
+      cursor: pointer;
+    }
+
+    /* custom arrow (optional) */
+    .custom-select::after {
+      content: "▼";
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #2e7d82;
+      pointer-events: none;
+      font-size: 12px;
+    }
+
+    /* ----- floating label ----- */
+    .custom-select label {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #2e7d82;
+      pointer-events: none;
+      transition: all 0.2s ease;
+      font-size: 16px;
+    }
+
+    /* label moves up when select is focused or has a value */
+    .custom-select select:focus + label,
+    .custom-select select:not(:invalid) + label,
+    .custom-select.select-filled label {
+      top: 0;
+      font-size: 12px;
+    }
+
+    /* underline animation (same as text-input) */
+    .custom-select::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: #2e7d82;
+      transition: width 0.3s ease;
+    }
+    .custom-select.focused::before {
+      width: 100%;
+    }
+
+
+    .select-items {
+      color: #2e7d82;
+      padding: 10px;
+      border-bottom: 1px solid #2e7d82; 
+      background-color: #f6feff;
+    }
+
+
+    
+
+    
+
+
+
+
+
+    .file-uploader {
+      position: relative;
+      display: inline-block;
+      width: 300px;
+      background-color: #e0f7fa;
+      padding: 10px;
+      border-bottom: 2px dashed #2e7d82;
+      margin-bottom: 20px;
+    }
+
+    .file-uploader input[type="file"] {
+      width: 100%;
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .file-uploader label {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      color: #2e7d82;
+      font-size: 16px;
+      pointer-events: none;
+      transition: all 0.2s ease;
+    }
+
+    .file-uploader .upload-options {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 10px;
+    }
+
+    .file-uploader .upload-options span {
+      cursor: pointer;
+      color: #666;
+      font-size: 18px;
+    }
+
+    .file-uploader .upload-options span:hover {
+      color: #2e7d82;
+    }
+
+    .file-uploader.focused label {
+      top: 0;
+      font-size: 12px;
+    }
+
+    .file-uploader::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: #2e7d82;
+      transition: width 0.3s ease;
+    }
+
+    .file-uploader.focused::before {
+      width: 100%;
+    }
+
+
+
+
+    /* Base container styling */
+.select2-container {
+    box-sizing: border-box;
+    display: inline-block;
+    margin: 0;
+    position: relative;
+    vertical-align: middle;
+    width: 300px; /* Consistent width with previous examples */
+}
+
+/* Single selection styling */
+.select2-container .select2-selection--single {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    height: 40px; /* Increased height for better alignment */
+    background-color: #e0f7fa; /* Light cyan background */
+    border-bottom: 2px dashed #2e7d82; /* Dashed underline */
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    outline: none;
+    user-select: none;
+    -webkit-user-select: none;
+    position: relative;
+}
+
+/* Rendered text styling */
+.select2-container .select2-selection--single .select2-selection__rendered {
+    display: block;
+    padding-left: 10px;
+    padding-right: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 40px; /* Align with height */
+    color: #2e7d82; /* Dark teal text */
+    font-size: 16px;
+}
+
+/* Placeholder styling */
+.select2-container .select2-selection--single .select2-selection__placeholder {
+    color: #2e7d82; /* Match text color for consistency */
+    opacity: 0.7; /* Slight fade for placeholder */
+}
+
+/* Arrow styling */
+.select2-container .select2-selection--single .select2-selection__arrow {
+    height: 40px;
+    position: absolute;
+    top: 0;
+    right: 10px;
+    width: 20px;
+    background: none;
+    border: none;
+}
+
+.select2-container .select2-selection--single .select2-selection__arrow b {
+    border-color: #2e7d82 transparent transparent transparent; /* Dark teal arrow */
+    border-style: solid;
+    border-width: 6px 4px 0 4px;
+    height: 0;
+    left: 50%;
+    margin-left: -4px;
+    margin-top: -2px;
+    position: absolute;
+    top: 50%;
+    width: 0;
+}
+
+.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent #2e7d82 transparent;
+    border-width: 0 4px 6px 4px;
+}
+
+/* Dropdown styling */
+.select2-dropdown {
+    background-color: #e0f7fa; /* Match input background */
+    border: 1px solid #2e7d82; /* Dark teal border */
+    border-radius: 0; /* Remove default rounding */
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    z-index: 1051;
+    margin-top: -1px; /* Align with input */
+}
+
+/* Options styling */
+.select2-results__options {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.select2-results__option {
+    padding: 10px;
+    user-select: none;
+    -webkit-user-select: none;
+    color: #2e7d82; /* Dark teal text */
+    font-size: 14px; /* Slightly smaller for options */
+    border-bottom: 1px solid #c2e9ef; /* Light divider */
+}
+
+.select2-results__option:hover {
+    background-color: #c2e9ef; /* Light hover effect */
+}
+
+.select2-results__option[aria-selected="true"] {
+    background-color: #b3e0e6; /* Selected option highlight */
+    font-weight: bold;
+}
+
+.select2-results__option--highlighted {
+    background-color: #b3e0e6; /* Highlight on hover/focus */
+    color: #2e7d82;
+}
+
+/* Focus state for underline animation */
+.select2-container--focus .select2-selection--single {
+    border-bottom: 2px solid #2e7d82; /* Solid underline on focus */
+}
+
+.select2-container--focus .select2-selection--single::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #2e7d82;
+    transition: width 0.3s ease;
+}
+
+/* Hide default clear button if not needed */
+.select2-selection__clear {
+    display: none;
+}
+
+/* RTL adjustments (optional, keep as needed) */
+.select2-container[dir="rtl"] .select2-selection--single .select2-selection__rendered {
+    padding-right: 10px;
+    padding-left: 30px;
+}
+
+.select2-container[dir="rtl"] .select2-selection--single .select2-selection__arrow {
+    left: 10px;
+    right: auto;
+}
+
+
+.label-error {
+  color: red !important;
+}
