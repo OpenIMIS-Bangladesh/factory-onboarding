@@ -74,7 +74,7 @@ class Factories(db.Model):
 class Users(db.Model):
     __tablename__ = 'tblUsers'
 
-    AuditUserID = db.Column(db.Integer, primary_key=True)
+    AuditUserID = db.Column(db.Integer)
     DummyPwd = db.Column(db.String(255))
     EmailId = db.Column(db.String(255))
     HFID = db.Column(db.Integer)
@@ -89,7 +89,7 @@ class Users(db.Model):
     PrivateKey = db.Column(db.Text)
     StoredPassword = db.Column(db.String(255))
     RoleID = db.Column(db.Integer)
-    UserID = db.Column(db.Integer)
+    UserID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     
     # Use string-based UUID
     UserUUID = db.Column(db.String(36), default=lambda: str(uuid.uuid4()), unique=True, nullable=False)
@@ -101,6 +101,39 @@ class Users(db.Model):
 
     def __repr__(self):
         return f"<Users {self.LoginName}>"
+    
+
+
+class CoreUsers(db.Model):
+    __tablename__ = 'core_User'
+
+    id = db.Column(db.String(36), default=lambda: str(uuid.uuid4()), unique=True, nullable=False, primary_key=True)
+    username = db.Column(db.String(255), nullable=False)
+    i_user_id = db.Column(db.Integer)
+    t_user_id = db.Column(db.Integer)
+    claim_admin_id = db.Column(db.Integer)
+    officer_id = db.Column(db.Integer)
+    LegacyID = db.Column(db.Integer)
+    ValidityFrom = db.Column(db.DateTime, default=datetime.utcnow)
+    ValidityTo = db.Column(db.DateTime)
+
+    def __repr__(self):
+        return f"<CoreUsers {self.username}>"
+    
+
+class UserDistrict(db.Model):
+    __tablename__ = 'tblUsersDistricts'
+
+    UserDistrictID = db.Column(db.Integer, primary_key=True)
+    LegacyID = db.Column(db.Integer)
+    ValidityFrom = db.Column(db.DateTime, default=datetime.utcnow)
+    ValidityTo = db.Column(db.DateTime, nullable=True)
+    AuditUserID = db.Column(db.Integer, nullable=False)
+    LocationId = db.Column(db.Integer, nullable=False)
+    UserID = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f"<UserDistrict {self.UserDistrictID} - UserID {self.UserID} - Location {self.LocationId}>"
     
 
 
@@ -197,8 +230,8 @@ class Documents(db.Model):
     approver_id = db.Column(db.Integer)
     
     # UUIDs for created/updated users
-    UserCreatedUUID = db.Column(db.String(36))
-    UserUpdatedUUID = db.Column(db.String(36))
+    UserCreatedUUID = db.Column(db.String(100))
+    UserUpdatedUUID = db.Column(db.String(100))
     
     verifier_id = db.Column(db.Integer)
     workforce_application_id = db.Column(db.String(255))
@@ -299,6 +332,7 @@ def submit_form():
     representative_dob = request.form.get('representative_dob')
     representative_address = request.form.get('representative_address')
     representative_location = request.form.get('representative_ward')
+    representative_district= request.form.get('representative_district')
 
     # --------------------------
     # 2. Get file
@@ -314,11 +348,51 @@ def submit_form():
     data = {'name': file.filename} 
 
     try:
+        user = Users(
+            AuditUserID=-1,
+            LoginName=representative_phone,  # assuming login is name
+            OtherNames=representative_name_bn,
+            RoleID=25,  # example: set role ID for representative
+            EmailId=representative_email,
+            Phone=representative_phone,
+            PrivateKey='C1C224B03CD9BC7B6A86D77F5DACE40191766C485CD55DC48CAF9AC873335D6F',  # store passport as temp password
+            password='59E66831C680C19E8736751D5480A7C3291BD8775DF47C19C4D0361FBC1C3438',
+            UserUUID=str(uuid.uuid4()),
+            ValidityFrom=datetime.utcnow(),
+            LastLogin=datetime.utcnow(),
+            LanguageID='en',
+            LastName=representative_name
+        )
+
+
+        db.session.add(user)
+        userIdQ= Users.query.filter_by(LoginName=user.LoginName).first()
+
+
+        core_user = CoreUsers(
+            id=str(uuid.uuid4()),
+            username= user.LoginName,
+            i_user_id= user.UserID,
+        )
+
+        db.session.add(core_user)
+
+
+        user_district=  UserDistrict(
+            UserID= user.UserID,
+            LocationId= representative_district,
+            AuditUserID= -1,
+        )
+
+        db.session.add(user_district)
+        
+
         api_response = requests.post(UPLOAD_API_URL, files=files, data=data)
         api_response.raise_for_status()
         response_data = api_response.json()
 
         uploaded_file = response_data
+        
 
         document = Documents(
             holder=factory_name_en,
@@ -346,7 +420,9 @@ def submit_form():
                 "representative_dob": representative_dob,
                 "representative_address": representative_address,
                 "representative_location": representative_location,
-            }
+            },
+            UserCreatedUUID = core_user.id,
+            UserUpdatedUUID = core_user.id
         )
         db.session.add(document)
         db.session.commit()
