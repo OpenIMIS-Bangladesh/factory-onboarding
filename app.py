@@ -2,29 +2,29 @@ from flask import Flask, render_template, request, redirect, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID, JSON
 from datetime import datetime
+from dotenv import load_dotenv
 import uuid
 import requests
+import os
+
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'tahir@1234'
+app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
-
-
-# -------------------------------
-# Database Configuration
-# -------------------------------
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/imis'
+# Database configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['file_upload_api']='http://localhost:8000/api/workforce/document/upload'
-
+app.config['file_upload_api'] = os.getenv('FILE_UPLOAD_API')
 db = SQLAlchemy(app)
 
 @app.context_processor
 def inject_globals():
     return {
-        'app_name': 'Factory Registration Portal',
-        'developer': 'Sky Digital BD Limited',
-        'main_page' : 'https://cf-stage.skydigitalbd.com/front/administrative/login'
+        'app_name': os.getenv('APP_NAME'),
+        'developer': os.getenv('DEVELOPER'),
+        'main_page': os.getenv('MAIN_PAGE')
     }
 
 # -------------------------------
