@@ -50,34 +50,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const uploader = document.querySelector('.file-uploader');
-      const input = uploader.querySelector('input[type="file"]');
-      const label = uploader.querySelector('label');
+    // document.addEventListener('DOMContentLoaded', () => {
+    //   const uploader = document.querySelector('.file-uploader');
+    //   const input = uploader.querySelector('input[type="file"]');
+    //   const label = uploader.querySelector('label');
 
-      input.addEventListener('focus', () => {
-        uploader.classList.add('focused');
-        label.style.top = '0';
-        label.style.fontSize = '12px';
-      });
+    //   input.addEventListener('focus', () => {
+    //     uploader.classList.add('focused');
+    //     label.style.top = '0';
+    //     label.style.fontSize = '12px';
+    //   });
 
-      input.addEventListener('blur', () => {
-        if (!input.value) {
-          uploader.classList.remove('focused');
-          label.style.top = '50%';
-          label.style.fontSize = '16px';
-          label.style.transform = 'translateY(-50%)';
-        }
-      });
+    //   input.addEventListener('blur', () => {
+    //     if (!input.value) {
+    //       uploader.classList.remove('focused');
+    //       label.style.top = '50%';
+    //       label.style.fontSize = '16px';
+    //       label.style.transform = 'translateY(-50%)';
+    //     }
+    //   });
 
-      input.addEventListener('change', () => {
-        if (input.value) {
-          uploader.classList.add('focused');
-          label.style.top = '0';
-          label.style.fontSize = '12px';
-        }
-      });
-    });
+    //   input.addEventListener('change', () => {
+    //     if (input.value) {
+    //       uploader.classList.add('focused');
+    //       label.style.top = '0';
+    //       label.style.fontSize = '12px';
+    //     }
+    //   });
+    // });
 
 
 

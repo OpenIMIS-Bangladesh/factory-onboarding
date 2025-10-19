@@ -8,13 +8,24 @@ import requests
 app = Flask(__name__)
 app.secret_key = 'tahir@1234'
 
+
+
 # -------------------------------
 # Database Configuration
 # -------------------------------
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/imis'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['file_upload_api']='http://localhost:8000/api/workforce/document/upload'
 
 db = SQLAlchemy(app)
+
+@app.context_processor
+def inject_globals():
+    return {
+        'app_name': 'Factory Registration Portal',
+        'developer': 'Sky Digital BD Limited',
+        'main_page' : 'https://cf-stage.skydigitalbd.com/front/administrative/login'
+    }
 
 # -------------------------------
 # Model (represents tblLocations)
@@ -28,7 +39,7 @@ class Location(db.Model):
     LocationUUID = db.Column(db.String(100))
     ParentLocationId = db.Column(db.Integer)
     ValidityFrom = db.Column(db.DateTime)
-    ValidityTo = db.Column(db.DateTime)
+    ValidityTo = db.Column(db.DateTime, default=None)
     wCodeId = db.Column(db.Integer)
     def __repr__(self):
         return f"<Locations {self.LocationName}>"
@@ -59,8 +70,8 @@ class Factories(db.Model):
     UserCreatedUUID = db.Column(db.String(36))
     UserUpdatedUUID = db.Column(db.String(36))
     workforce_employer_id = db.Column(db.Integer)
-    workforce_representative_id = db.Column(db.Integer)
-    is_same_company_representative = db.Column(db.Boolean, default=False)
+    workforce_representative_id = db.Column(db.String(50))
+    is_same_company_representative = db.Column(db.Integer, default=0)
     association_type = db.Column(db.String(100))
 
     def __repr__(self):
@@ -95,7 +106,7 @@ class Users(db.Model):
     UserUUID = db.Column(db.String(36), default=lambda: str(uuid.uuid4()), unique=True, nullable=False)
 
     ValidityFrom = db.Column(db.DateTime)
-    ValidityTo = db.Column(db.DateTime)
+    ValidityTo = None
     password = db.Column(db.String(255))
     LastLogin = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -115,11 +126,24 @@ class CoreUsers(db.Model):
     officer_id = db.Column(db.Integer)
     LegacyID = db.Column(db.Integer)
     ValidityFrom = db.Column(db.DateTime, default=datetime.utcnow)
-    ValidityTo = db.Column(db.DateTime)
+    ValidityTo = db.Column(db.DateTime, default=None)
 
     def __repr__(self):
         return f"<CoreUsers {self.username}>"
     
+class UserRoles(db.Model):
+    __tablename__ = 'tblUserRole'
+    ValidityFrom = db.Column(db.DateTime, default=datetime.utcnow)
+    ValidityTo = db.Column(db.DateTime, default=None)
+    LegacyID = db.Column(db.Integer)
+    UserRoleID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    AudituserID = db.Column(db.Integer)
+    RoleID = db.Column(db.Integer)
+    UserID = db.Column(db.Integer)
+    Assign = db.Column(db.Integer, default=None)
+
+    def __repr__(self):
+        return f"<UserRoles UserID={self.UserID}, RoleID={self.RoleID}>"
 
 class UserDistrict(db.Model):
     __tablename__ = 'tblUsersDistricts'
@@ -127,7 +151,7 @@ class UserDistrict(db.Model):
     UserDistrictID = db.Column(db.Integer, primary_key=True)
     LegacyID = db.Column(db.Integer)
     ValidityFrom = db.Column(db.DateTime, default=datetime.utcnow)
-    ValidityTo = db.Column(db.DateTime, nullable=True)
+    ValidityTo = db.Column(db.DateTime, default=None)
     AuditUserID = db.Column(db.Integer, nullable=False)
     LocationId = db.Column(db.Integer, nullable=False)
     UserID = db.Column(db.Integer, nullable=False)
@@ -190,14 +214,14 @@ class Employees(db.Model):
     mother_name_en = db.Column(db.String(255))
     other_name = db.Column(db.String(255))
     privacy_law = db.Column(db.String(255))
-    registration_date = db.Column(db.Date)
+    registration_date = db.Column(db.DateTime, onupdate=datetime.utcnow)
     spouse_name_bn = db.Column(db.String(255))
     spouse_name_en = db.Column(db.String(255))
     death_date = db.Column(db.Date)
     insurance_number = db.Column(db.String(255))
     life_status = db.Column(db.String(100))
     disability_status = db.Column(db.String(100))
-    workforce_factory_id = db.Column(db.Integer)
+    workforce_factory_id = db.Column(db.String(50))
 
     def __repr__(self):
         return f"<Employees {self.first_name_en} {self.last_name_en}>"
@@ -291,6 +315,11 @@ def index():
     locations = Location.query.filter_by(ParentLocationId=None, LocationType='R').all()
     return render_template('index.html', locations=locations)
 
+
+@app.route('/success')
+def success():
+    return render_template('success.html')
+
 @app.route('/api/get_locations', methods=['GET'])
 def get_locations():
     parent_id = request.args.get('parent_id')
@@ -304,7 +333,7 @@ def get_locations():
     
     return jsonify(results)
 
-UPLOAD_API_URL = "http://localhost:8000/api/workforce/document/upload"
+UPLOAD_API_URL = app.config['file_upload_api']
 
 
 @app.route('/submit_form', methods=['POST'])
@@ -356,7 +385,8 @@ def submit_form():
             EmailId=representative_email,
             Phone=representative_phone,
             PrivateKey='C1C224B03CD9BC7B6A86D77F5DACE40191766C485CD55DC48CAF9AC873335D6F',  # store passport as temp password
-            password='59E66831C680C19E8736751D5480A7C3291BD8775DF47C19C4D0361FBC1C3438',
+            StoredPassword='59E66831C680C19E8736751D5480A7C3291BD8775DF47C19C4D0361FBC1C3438',
+            password='x001699E55A06FA79F4CA0D06EF15096C02000000DF691E2CE66AA7ABDF65B3E6210C1C04CAAE1A3B1FEE5E266B5FAF4F7D4E95109C92E3205F0145CC',
             UserUUID=str(uuid.uuid4()),
             ValidityFrom=datetime.utcnow(),
             LastLogin=datetime.utcnow(),
@@ -367,7 +397,8 @@ def submit_form():
 
         db.session.add(user)
         userIdQ= Users.query.filter_by(LoginName=user.LoginName).first()
-
+        user.UserID= userIdQ.UserID
+        
 
         core_user = CoreUsers(
             id=str(uuid.uuid4()),
@@ -385,6 +416,93 @@ def submit_form():
         )
 
         db.session.add(user_district)
+
+
+        user_role= UserRoles(
+            RoleID= 25,
+            AudituserID= 1,
+            UserID= user.UserID,
+            # Assign= True
+        )
+
+        db.session.add(user_role)
+        userRoleQ= UserRoles.query.filter_by(UserID=user.UserID).first()
+
+
+        birth_date_str = request.form.get('representative_dob')
+        birth_date_str= '10-10-1996'
+        birth_date_obj = datetime.strptime(birth_date_str, "%d-%m-%Y")
+        birth_date_formatted = birth_date_obj.strftime("%Y-%m-%d")
+
+
+        representative= Representatives(
+            UUID= str(uuid.uuid4()),
+            type = 'admin',
+            name_bn = representative_name_bn,
+            name_en = representative_name,
+            address = representative_address,
+            phone_number = representative_phone,
+            email = representative_email,
+            nid = representative_nid,
+            passport_no = representative_passport,
+            birth_date = birth_date_formatted,
+            position = representative_designation,
+            location_id = representative_location,
+            related_user_id = user.UserID,
+
+            # UUIDs for created/updated users
+            UserCreatedUUID = core_user.id,
+            UserUpdatedUUID = core_user.id
+        )
+
+        db.session.add(representative)
+
+
+        factory= Factories(
+            UUID= str(uuid.uuid4()),
+            name_bn = factory_name_bn,
+            name_en = factory_name_en,
+            address = factory_address,
+            phone_number = factory_phone,
+            email = factory_email,
+            website = factory_web,
+            status = 'draft',
+            location_id = factory_location,
+            UserCreatedUUID = core_user.id,
+            UserUpdatedUUID = core_user.id,
+            workforce_employer_id = None,
+            workforce_representative_id = representative.UUID,
+            association_type = association,
+        )
+
+        db.session.add(factory)
+
+
+
+        
+
+        employee = Employees(
+            UUID= str(uuid.uuid4()),
+            position = representative_designation,
+            present_address = representative_address,
+            permanent_address = representative_address,
+            phone_number = representative_phone,
+            email = representative_email,
+            birth_date = birth_date_formatted,
+            nid = representative_nid,
+            passport_no = representative_passport,
+            permanent_location_id = representative_location,
+            present_location_id = representative_location,
+            related_user_id = user.UserID,
+            UserCreatedUUID = core_user.id,
+            UserUpdatedUUID = core_user.id,
+            citizenship = 'Bangladeshi',
+            first_name_bn = representative_name_bn,
+            first_name_en = representative_name,
+            workforce_factory_id = factory.UUID
+        )
+
+        db.session.add(employee)
         
 
         api_response = requests.post(UPLOAD_API_URL, files=files, data=data)
@@ -395,6 +513,7 @@ def submit_form():
         
 
         document = Documents(
+            UUID= str(uuid.uuid4()),
             holder=factory_name_en,
             holder_type="factory",
             document_type="factory_membership_certificate",
@@ -433,7 +552,7 @@ def submit_form():
         return f"Error uploading file: {str(e)}", 500
     except Exception as db_error:
         db.session.rollback()
-        return f"Error saving document: {str(db_error)}", 500
+        return f"Error saving registration: {str(db_error)}", 500
 
 
 # -------------------------------
