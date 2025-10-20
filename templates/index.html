@@ -398,7 +398,7 @@
             }
 
 
-            fetch(`/api/get_locations?parent_id=${parentId}`)
+            fetch(`${window.location.href}/api/get_locations?parent_id=${parentId}`)
                 .then(response => response.json())
                 .then(data => {
                     const locationsSelect = document.getElementById(domId);

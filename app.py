@@ -10,7 +10,12 @@ import os
 
 load_dotenv()
 
-app = Flask(__name__)
+url_alias = os.getenv('URL_ALIAS')
+if url_alias is not None and url_alias != '':
+    app = Flask(__name__, static_url_path=f"/{url_alias}/static")
+else:
+    app = Flask(__name__)
+    
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
 # Database configuration
