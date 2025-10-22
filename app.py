@@ -29,7 +29,8 @@ def inject_globals():
     return {
         'app_name': os.getenv('APP_NAME'),
         'developer': os.getenv('DEVELOPER'),
-        'main_page': os.getenv('MAIN_PAGE')
+        'main_page': os.getenv('MAIN_PAGE'),
+        'url_alias': url_alias
     }
 
 # -------------------------------
