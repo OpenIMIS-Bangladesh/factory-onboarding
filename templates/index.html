@@ -16,6 +16,20 @@
 </head>
 
 <body>
+    {% if error %}
+    <div class="container-fluid mt-4" id="error_message" onclick="$(this).remove()" style="cursor: pointer;">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-danger text-light text-center">
+                        <span>i<h5 class="d-inline text-light"> {{ message }}</h5></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="container-fluid mt-4">
         <div class="row">
             <div class="col-md-12">
@@ -24,7 +38,7 @@
                         <button class="icon-circle" onclick="window.location.href='{{main_page}}'">
                             <i class="fas fa-angle-left"></i>
                         </button>
-                        <span><h5 class="d-inline">ফ্যাক্টরী রেজিস্ট্রেশন </h5></span>
+                        <span><h5 class="d-inline">ফ্যাক্টরী রেজিস্ট্রেশন</h5></span>
                     </div>
                 </div>
             </div>
@@ -44,31 +58,32 @@
                                     <div class="custom-select w-100">
                                         <select id="association" name="association" required>
                                             <option class="select-items" value="" disabled selected hidden></option>
-                                            <option class="select-items" value="BGMEA">BGMEA</option>
-                                            <option class="select-items" value="BKMEA">BKMEA</option>
+                                            <option class="select-items" value="BGMEA" {{ "selected" if form_data and form_data.get('association')=="BGMEA" else "" }}>BGMEA</option>
+                                            <option class="select-items" value="BKMEA" {{ "selected" if form_data and form_data.get('association')=="BKMEA" else "" }}>BKMEA</option>
+                                            <option class="select-items" value="BEPZA" {{ "selected" if form_data and form_data.get('association')=="BEPZA" else "" }}>BEPZA</option>
                                         </select>
                                         <label for="association">প্রতিষ্ঠান/ কারখানার অ্যাসোসিয়েশনের ধরণ *</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="factory_name_en" name="factory_name_en" required>
+                                        <input type="text" id="factory_name_en" name="factory_name_en" value="{{ form_data.get('factory_name_en') if form_data else "" }}" required>
                                         <label for="factory_name_en">প্রতিষ্ঠান/ কারখানার নাম (ইংরেজি)*</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="factory_phone" name="factory_phone">
+                                        <input type="text" id="factory_phone" name="factory_phone" value="{{ form_data.get('factory_phone') if form_data else "" }}">
                                         <label for="factory_phone">ফোন নম্বর</label>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="custom-input w-100">
-                                        <input type="text" id="factory_name_bn" name="factory_name_bn" required>
+                                        <input type="text" id="factory_name_bn" name="factory_name_bn" value="{{ form_data.get('factory_name_bn') if form_data else "" }}" required>
                                         <label for="factory_name_bn">প্রতিষ্ঠান/ কারখানার নাম (বাংলা)*</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="factory_email" name="factory_email">
+                                        <input type="text" id="factory_email" name="factory_email" value="{{ form_data.get('factory_email') if form_data else "" }}">
                                         <label for="factory_email">ই-মেইল</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="factory_web" name="factory_web">
+                                        <input type="text" id="factory_web" name="factory_web" value="{{ form_data.get('factory_web') if form_data else "" }}">
                                         <label for="factory_web">ওয়েবসাইট</label>
                                     </div>
                                 </div>
@@ -104,7 +119,7 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="custom-input w-100">
-                                                        <input type="text" id="factory_address" name="factory_address"
+                                                        <input type="text" id="factory_address" name="factory_address" value="{{ form_data.get('factory_address') if form_data else "" }}"
                                                             required>
                                                         <label for="factory_address">গ্রাম/ প্লট/ বাড়ি/ রাস্তা*</label>
                                                     </div>
@@ -117,7 +132,7 @@
                                                             class="w-100 select2" required>
                                                             <option value="">নির্বাচন করুন</option>
                                                             {% for location in locations %}
-                                                            <option value="{{ location.LocationId }}">{{
+                                                            <option value="{{ location.LocationId }}" {{ "selected" if form_data and form_data.get('factory_division') else "" }}>{{
                                                                 location.LocationName }}</option>
                                                             {% endfor %}
                                                         </select>
@@ -171,40 +186,40 @@
                             <div class="row">
                                 <div class="col-6">
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_name" name="representative_name" required>
+                                        <input type="text" id="representative_name" name="representative_name" value="{{ form_data.get('representative_name') if form_data else "" }}" required>
                                         <label for="representative_name">প্রতিনিধির নাম (ইংরেজি)*</label>
                                     </div>
                                     <div class="custom-input w-100">
                                         <input type="text" id="representative_designation"
-                                            name="representative_designation" required>
+                                            name="representative_designation" value="{{ form_data.get('representative_designation') if form_data else "" }}" required>
                                         <label for="representative_designation">পদবী*</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_email" name="representative_email">
+                                        <input type="text" id="representative_email" name="representative_email" value="{{ form_data.get('representative_email') if form_data else "" }}">
                                         <label for="representative_email">ই-মেইল</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_passport" name="representative_passport">
+                                        <input type="text" id="representative_passport" name="representative_passport" value="{{ form_data.get('representative_passport') if form_data else "" }}">
                                         <label for="representative_passport">পাসপোর্ট নম্বর</label>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_name_bn" name="representative_name_bn"
+                                        <input type="text" id="representative_name_bn" name="representative_name_bn" value="{{ form_data.get('representative_name_bn') if form_data else "" }}"
                                             required>
                                         <label for="representative_name_bn">প্রতিনিধির নাম (বাংলা)*</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_phone" name="representative_phone">
+                                        <input type="text" id="representative_phone" name="representative_phone" value="{{ form_data.get('representative_phone') if form_data else "" }}" required>
                                         <label for="representative_phone">ফোন নম্বর (লগইন ইউজারনেম হিসেবে ব্যবহৃত
-                                            হবে)</label>
+                                            হবে)*</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_nid" name="representative_nid" required>
+                                        <input type="text" id="representative_nid" name="representative_nid" value="{{ form_data.get('representative_nid') if form_data else "" }}" required>
                                         <label for="representative_nid">জাতীয় পরিচয়পত্র নম্বর*</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" class="datepicker" id="representative_dob"
+                                        <input type="text" class="datepicker" id="representative_dob" value="{{ form_data.get('representative_dob') if form_data else "" }}"
                                             name="representative_dob">
                                         <label for="representative_dob">জন্মতারিখ</label>
                                     </div>
@@ -219,7 +234,7 @@
                                                 <div class="col-12">
                                                     <div class="custom-input w-100">
                                                         <input type="text" id="representative_address"
-                                                            name="representative_address" required>
+                                                            name="representative_address" value="{{ form_data.get('representative_address') if form_data else "" }}" required>
                                                         <label for="representative_address">গ্রাম/ প্লট/ বাড়ি/
                                                             রাস্তা*</label>
                                                     </div>
@@ -233,7 +248,7 @@
                                                             class="w-100 select2" required>
                                                             <option value="">নির্বাচন করুন</option>
                                                             {% for location in locations %}
-                                                            <option value="{{ location.LocationId }}">{{
+                                                            <option value="{{ location.LocationId }}" {{ "selected" if form_data and form_data.get('representative_division') else "" }}>{{
                                                                 location.LocationName }}</option>
                                                             {% endfor %}
                                                         </select>

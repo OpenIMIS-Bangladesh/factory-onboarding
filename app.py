@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash, jsonify
+from flask import Flask, render_template, session, request, redirect, flash, jsonify, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID, JSON
 from datetime import datetime
@@ -318,7 +318,10 @@ class Representatives(db.Model):
 @app.route('/')
 def index():
     locations = Location.query.filter_by(ParentLocationId=None, LocationType='R').all()
-    return render_template('index.html', locations=locations)
+    form_data= session.pop('form_data', None)
+    error= session.pop('error', None)
+    message= session.pop('message', None)
+    return render_template('index.html', locations=locations, form_data=form_data, message=message, error= error)
 
 
 @app.route('/success')
@@ -346,27 +349,27 @@ def submit_form():
     # --------------------------
     # 1. Get form fields
     # --------------------------
-    association = request.form.get('association')
-    factory_name_en = request.form.get('factory_name_en')
-    factory_name_bn = request.form.get('factory_name_bn')
-    factory_phone = request.form.get('factory_phone')
-    factory_email = request.form.get('factory_email')
-    factory_web = request.form.get('factory_web')
-    factory_address = request.form.get('factory_address')
-    factory_location = request.form.get('factory_ward')
+    association = request.form.get('association') if request.form.get('association')!="" else None
+    factory_name_en = request.form.get('factory_name_en') if request.form.get('factory_name_en')!="" else None
+    factory_name_bn = request.form.get('factory_name_bn') if request.form.get('factory_name_bn')!="" else None
+    factory_phone = request.form.get('factory_phone') if request.form.get('factory_phone')!="" else None
+    factory_email = request.form.get('factory_email') if request.form.get('factory_email')!="" else None
+    factory_web = request.form.get('factory_web') if request.form.get('factory_web')!="" else None
+    factory_address = request.form.get('factory_address') if request.form.get('factory_address')!="" else None
+    factory_location = request.form.get('factory_ward') if request.form.get('factory_ward')!="" else None
 
     # Representative Information
-    representative_name = request.form.get('representative_name')
-    representative_name_bn = request.form.get('representative_name_bn')
-    representative_designation = request.form.get('representative_designation')
-    representative_email = request.form.get('representative_email')
-    representative_passport = request.form.get('representative_passport')
-    representative_phone = request.form.get('representative_phone')
-    representative_nid = request.form.get('representative_nid')
-    representative_dob = request.form.get('representative_dob')
-    representative_address = request.form.get('representative_address')
-    representative_location = request.form.get('representative_ward')
-    representative_district= request.form.get('representative_district')
+    representative_name = request.form.get('representative_name') if request.form.get('representative_name')!="" else None
+    representative_name_bn = request.form.get('representative_name_bn') if request.form.get('representative_name_bn')!="" else None
+    representative_designation = request.form.get('representative_designation') if request.form.get('representative_designation')!="" else None
+    representative_email = request.form.get('representative_email') if request.form.get('representative_email')!="" else None
+    representative_passport = request.form.get('representative_passport') if request.form.get('representative_passport')!="" else None
+    representative_phone = request.form.get('representative_phone') if request.form.get('representative_phone')!="" else None
+    representative_nid = request.form.get('representative_nid') if request.form.get('representative_nid')!="" else None
+    representative_dob = request.form.get('representative_dob') if request.form.get('representative_dob')!="" else None
+    representative_address = request.form.get('representative_address') if request.form.get('representative_address')!="" else None
+    representative_location = request.form.get('representative_ward') if request.form.get('representative_ward')!="" else None
+    representative_district= request.form.get('representative_district') if request.form.get('representative_district')!="" else None
 
     # --------------------------
     # 2. Get file
@@ -556,8 +559,12 @@ def submit_form():
     except requests.RequestException as e:
         return f"Error uploading file: {str(e)}", 500
     except Exception as db_error:
+        return f"Error uploading file: {str(db_error)}", 500
         db.session.rollback()
-        return f"Error saving registration: {str(db_error)}", 500
+        session['form_data'] = request.form.to_dict()
+        session['error'] = True
+        session['message'] = 'টাইপকৃত ই-মেইল অথবা ফোন নাম্বার অথবা পাসপোর্ট নাম্বার ইতিমধ্যে বিদ্যমান। দয়া করে আবার চেষ্টা করুন।'
+        return redirect(url_for('index'))
 
 
 # -------------------------------
