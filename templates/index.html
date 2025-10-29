@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ফ্যাক্টরী রেজিস্ট্রেশন</title>
+    <title>ফ্যাক্টরী নিবন্ধন </title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free/css/all.min.css') }}">
@@ -30,15 +30,34 @@
     </div>
     {% endif %}
 
+    <div class="container-fluid bg-light py-3" style="position: sticky; z-index: 2000; top: 0; left: 0;">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header text-light" style="background-color: #006273;">
+                        <p>
+                            <ul class="text-left text-light">
+                                <li>ফ্যাক্টরীর সঠিক তথ্য এবং প্রতিনিধির জাতীয় পরিচয়পত্র অনুযায়ী তথ্য দিয়ে নিবন্ধনের আবেদন সম্পন্ন করুন।</li>
+                                <li>সফলভাবে নিবন্ধনের আবেদন সংশ্লিষ্ট এসোসিয়েশন কর্তৃক অনুমোদিত হবে।</li>
+                                <li>অনুমোদন সাপেক্ষে আপনার প্রদত্ত ইমেইলে আইডি এবং পাসওয়ার্ড পাঠানো হবে।</li>
+                                <li>ইমেইলে পাওয়া আইডি এবং পাসওয়ার্ড ব্যবহার করে আপনি ফ্যাক্টরীর প্রতিনিধি হিসেবে লগ ইন করতে পারবেন <a href="" id="page_link" class="text-reset text-decoration-underline">এই লিংকে</a></li>
+                            </ul>
+                        </p>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container-fluid mt-4">
         <div class="row">
             <div class="col-md-12">
                 <div class="card shadow-sm">
                     <div class="card-header text-left">
-                        <button class="icon-circle" onclick="window.location.href='{{main_page}}'">
+                        <button class="icon-circle" onclick="window.location.href.includes('eis')?window.location.href='{{eis_page}}':window.location.href='{{cf_page}}'">
                             <i class="fas fa-angle-left"></i>
                         </button>
-                        <span><h5 class="d-inline">ফ্যাক্টরী রেজিস্ট্রেশন</h5></span>
+                        <span><h5 class="d-inline">ফ্যাক্টরী নিবন্ধন </h5></span>
                     </div>
                 </div>
             </div>
@@ -335,6 +354,12 @@
                 language: 'bn'
 
             });
+
+            if(window.location.href.includes('eis')){
+                $('#page_link').attr('href', '{{eis_page}}');
+            } else {
+                $('#page_link').attr('href', '{{cf_page}}');
+            }
         });
 
 
