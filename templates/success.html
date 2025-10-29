@@ -26,16 +26,26 @@
             Registration Successful
         </h1>
         <p>Your request is pending for approval from Administration</p>
-        <p>Redirecting to <a href="{{main_page}}">Login Page</a>.....</p>
+        <p>Redirecting to <a href="" id="redirecting_page">Login Page</a>.....</p>
     </div>
 
 
     <script>
         $(document).ready(function()
         {
+            if(window.location.href.includes('eis')){
+                $('#redirecting_page').attr('href', '{{eis_page}}');
+            } else {
+                $('#redirecting_page').attr('href', '{{cf_page}}');
+            }
+
             setTimeout(function()
             {
-                window.location.href= '{{main_page}}';
+                if(window.location.href.includes('eis')){
+                    window.location.href= '{{eis_page}}';
+                } else {
+                    window.location.href= '{{cf_page}}';
+                }
             }, 2500);
         })
     </script>
