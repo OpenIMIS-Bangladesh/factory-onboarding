@@ -19,7 +19,7 @@ else:
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
 # Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['file_upload_api'] = os.getenv('FILE_UPLOAD_API')
 db = SQLAlchemy(app)
