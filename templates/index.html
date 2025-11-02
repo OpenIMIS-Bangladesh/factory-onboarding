@@ -10,9 +10,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/select2.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/datepicker.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="{{ url_for('static', filename='jquery/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 
 <body>
@@ -360,7 +362,44 @@
             } else {
                 $('#page_link').attr('href', '{{cf_page}}');
             }
+
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "3000"
+            };
+
+
+            $("#factory_phone").on("change", function () {
+                this.value = this.value.replace(/[^0-9]/g, '');
+
+                let phone = $(this).val();
+
+                if (phone.length >= 11) {
+                    const bdPhoneRegex = /^01[3-9]\d{8}$/;
+
+                    if (!bdPhoneRegex.test(phone)) {
+                       return alert("Invalid Bangladeshi phone number! Example: 017xxxxxxxx");
+                    }
+                }
+            });
+            
+            $("#representative_phone").on("change", function () {
+                this.value = this.value.replace(/[^0-9]/g, '');
+
+                let phone = $(this).val();
+
+                if (phone.length >= 11) {
+                    const bdPhoneRegex = /^01[3-9]\d{8}$/;
+
+                    if (!bdPhoneRegex.test(phone)) {
+                       return alert("Invalid Bangladeshi phone number! Example: 017xxxxxxxx");
+                    }
+                }
+            });
         });
+
 
 
 
@@ -505,6 +544,7 @@
             }
         }
     </script>
+    
 
 </body>
 

@@ -559,9 +559,14 @@ def submit_form():
         return render_template('success.html')
     
     except requests.RequestException as e:
-        return f"Error uploading file: {str(e)}", 500
+        # return f"Error uploading file: {str(e)}", 500
+        db.session.rollback()
+        session['form_data'] = request.form.to_dict()
+        session['error'] = True
+        session['message'] = str(e)
+        return redirect(url_for('index'))
     except Exception as db_error:
-        return f"Error uploading file: {str(db_error)}", 500
+        # return f"Error uploading file: {str(db_error)}", 500
         db.session.rollback()
         session['form_data'] = request.form.to_dict()
         session['error'] = True
