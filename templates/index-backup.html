@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ফ্যাক্টরী নিবন্ধন </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/select2.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/datepicker.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="{{ url_for('static', filename='jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+</head>
+
+<body>
+    {% if error %}
+    <div class="container-fluid mt-4" id="error_message" onclick="$(this).remove()" style="cursor: pointer;">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-danger text-light text-center">
+                        <span>i<h5 class="d-inline text-light"> {{ message }}</h5></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="container-fluid bg-light py-3" style="position: sticky; z-index: 2000; top: 0; left: 0;">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header text-light" style="background-color: #006273;">
+                        <p>
+                            <ul class="text-left text-light">
+                                <li>ফ্যাক্টরীর সঠিক তথ্য এবং প্রতিনিধির জাতীয় পরিচয়পত্র অনুযায়ী তথ্য দিয়ে নিবন্ধনের আবেদন সম্পন্ন করুন।</li>
+                                <li>সফলভাবে নিবন্ধনের আবেদন সংশ্লিষ্ট এসোসিয়েশন কর্তৃক অনুমোদিত হবে।</li>
+                                <li>অনুমোদন সাপেক্ষে আপনার প্রদত্ত ইমেইলে আইডি এবং পাসওয়ার্ড পাঠানো হবে।</li>
+                                <li>ইমেইলে পাওয়া আইডি এবং পাসওয়ার্ড ব্যবহার করে আপনি ফ্যাক্টরীর প্রতিনিধি হিসেবে লগ ইন করতে পারবেন <a href="" id="page_link" class="text-reset text-decoration-underline">এই লিংকে</a></li>
+                            </ul>
+                        </p>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow-sm">
+                    <div class="card-header text-left">
+                        <button class="icon-circle" onclick="window.location.href.includes('eis')?window.location.href='{{eis_page}}':window.location.href='{{cf_page}}'">
+                            <i class="fas fa-angle-left"></i>
+                        </button>
+                        <span><h5 class="d-inline">ফ্যাক্টরী নিবন্ধন </h5></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form action="{{url_alias}}/submit_form" id="factoryForm" method="POST" enctype="multipart/form-data">
+        <div class="container-fluid mt-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header py-4">
+                            <span>ফ্যাক্টরীর তথ্য</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="custom-select w-100">
+                                        <select id="association" name="association" required>
+                                            <option class="select-items" value="" disabled selected hidden></option>
+                                            <option class="select-items" value="BGMEA" {{ "selected" if form_data and form_data.get('association')=="BGMEA" else "" }}>BGMEA</option>
+                                            <option class="select-items" value="BKMEA" {{ "selected" if form_data and form_data.get('association')=="BKMEA" else "" }}>BKMEA</option>
+                                            <option class="select-items" value="BEPZA" {{ "selected" if form_data and form_data.get('association')=="BEPZA" else "" }}>BEPZA</option>
+                                        </select>
+                                        <label for="association">প্রতিষ্ঠান/ কারখানার অ্যাসোসিয়েশনের ধরণ *</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="factory_name_en" name="factory_name_en" value="{{ form_data.get('factory_name_en') if form_data else "" }}" required>
+                                        <label for="factory_name_en">প্রতিষ্ঠান/ কারখানার নাম (ইংরেজি)*</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="factory_phone" name="factory_phone" value="{{ form_data.get('factory_phone') if form_data else "" }}">
+                                        <label for="factory_phone">ফোন নম্বর</label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="factory_name_bn" name="factory_name_bn" value="{{ form_data.get('factory_name_bn') if form_data else "" }}" required>
+                                        <label for="factory_name_bn">প্রতিষ্ঠান/ কারখানার নাম (বাংলা)*</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="factory_email" name="factory_email" value="{{ form_data.get('factory_email') if form_data else "" }}">
+                                        <label for="factory_email">ই-মেইল</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="factory_web" name="factory_web" value="{{ form_data.get('factory_web') if form_data else "" }}">
+                                        <label for="factory_web">ওয়েবসাইট</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <div class="form-group">
+                                        <label for="file_upload">কারখানার মেম্বারশিপ সার্টিফিকেট আপলোড করুন *</label>
+                                        <input type="file" style="display: none;" name="file_upload" id="file-upload"
+                                            required>
+                                        <!-- <input style="display: none;" id="camera-upload" capture="environment" accept="image/*" > -->
+                                        <div class="card mt-2 d-flex flex-column justify-content-center align-items-center"
+                                            style="height: 40px; border: 2px dashed #2e7d82; background-color: rgb(239, 255, 255);">
+                                            <div class="d-inline">
+                                                <span
+                                                    style="border:none; background-color: transparent; cursor: pointer;"
+                                                    onclick="document.getElementById('file-upload').click();"><i
+                                                        class="fa fa-upload"></i> আপলোড করুন</span>
+                                                <!-- <span class="ms-4" style="border:none; background-color: transparent; cursor: pointer;" onclick="document.getElementById('camera-upload').click();"><i class="fa fa-camera"></i> ছবি তুলুন </span> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Preview area -->
+                                    <div id="file-preview" class="mt-2">
+
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-5">
+                                    <div class="card border-1 shadow-sm">
+                                        <div class="card-header">
+                                            <span>ফ্যাক্টরীর ঠিকানা</span>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="custom-input w-100">
+                                                        <input type="text" id="factory_address" name="factory_address" value="{{ form_data.get('factory_address') if form_data else "" }}"
+                                                            required>
+                                                        <label for="factory_address">গ্রাম/ প্লট/ বাড়ি/ রাস্তা*</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="mb-4">
+                                                        <label for="factory_division">বিভাগ*</label>
+                                                        <select name="factory_division" id="factory_division"
+                                                            onchange="loadLocation(this, 'factory_district')"
+                                                            class="w-100 select2" required>
+                                                            <option value="">নির্বাচন করুন</option>
+                                                            {% for location in locations %}
+                                                            <option value="{{ location.LocationId }}" {{ "selected" if form_data and form_data.get('factory_division') else "" }}>{{
+                                                                location.LocationName }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="mb-4">
+                                                        <label for="factory_district">জেলা/সিটি কর্পোরেশন*</label>
+                                                        <select name="factory_district" id="factory_district"
+                                                            onchange="loadLocation(this, 'factory_thana')"
+                                                            class="w-100 select2" required>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="mb-4">
+                                                        <label for="factory_thana">উপজেলা/থানা/পৌরসভা*</label>
+                                                        <select name="factory_thana" id="factory_thana"
+                                                            onchange="loadLocation(this, 'factory_ward')"
+                                                            class="w-100 select2" required>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="mb-4">
+                                                        <label for="factory_ward">ইউনিয়ন/ওয়ার্ড*</label>
+                                                        <select name="factory_ward" id="factory_ward"
+                                                            onchange="loadLocation(this, '')" class="w-100 select2"
+                                                            required>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid mt-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header py-4">
+                            <span>ফ্যাক্টরী প্রতিনিধির তথ্য</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="representative_name" name="representative_name" value="{{ form_data.get('representative_name') if form_data else "" }}" required>
+                                        <label for="representative_name">প্রতিনিধির নাম (ইংরেজি)*</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="representative_designation"
+                                            name="representative_designation" value="{{ form_data.get('representative_designation') if form_data else "" }}" required>
+                                        <label for="representative_designation">পদবী*</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="representative_email" name="representative_email" value="{{ form_data.get('representative_email') if form_data else "" }}">
+                                        <label for="representative_email">ই-মেইল</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="representative_passport" name="representative_passport" value="{{ form_data.get('representative_passport') if form_data else "" }}">
+                                        <label for="representative_passport">পাসপোর্ট নম্বর</label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="representative_name_bn" name="representative_name_bn" value="{{ form_data.get('representative_name_bn') if form_data else "" }}"
+                                            required>
+                                        <label for="representative_name_bn">প্রতিনিধির নাম (বাংলা)*</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="representative_phone" name="representative_phone" value="{{ form_data.get('representative_phone') if form_data else "" }}" required>
+                                        <label for="representative_phone">ফোন নম্বর (লগইন ইউজারনেম হিসেবে ব্যবহৃত
+                                            হবে)*</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="representative_nid" name="representative_nid" value="{{ form_data.get('representative_nid') if form_data else "" }}" required>
+                                        <label for="representative_nid">জাতীয় পরিচয়পত্র নম্বর*</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" class="datepicker" id="representative_dob" value="{{ form_data.get('representative_dob') if form_data else "" }}"
+                                            name="representative_dob">
+                                        <label for="representative_dob">জন্মতারিখ</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-5">
+                                    <div class="card border-1 shadow-sm">
+                                        <div class="card-header">
+                                            <span>ফ্যাক্টরী প্রতিনিধির ঠিকানা</span>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="custom-input w-100">
+                                                        <input type="text" id="representative_address"
+                                                            name="representative_address" value="{{ form_data.get('representative_address') if form_data else "" }}" required>
+                                                        <label for="representative_address">গ্রাম/ প্লট/ বাড়ি/
+                                                            রাস্তা*</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="mb-4">
+                                                        <label for="representative_division">বিভাগ*</label>
+                                                        <select name="representative_division"
+                                                            id="representative_division"
+                                                            onchange="loadLocation(this, 'representative_district')"
+                                                            class="w-100 select2" required>
+                                                            <option value="">নির্বাচন করুন</option>
+                                                            {% for location in locations %}
+                                                            <option value="{{ location.LocationId }}" {{ "selected" if form_data and form_data.get('representative_division') else "" }}>{{
+                                                                location.LocationName }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="mb-4">
+                                                        <label for="representative_district">জেলা/সিটি
+                                                            কর্পোরেশন*</label>
+                                                        <select name="representative_district"
+                                                            id="representative_district"
+                                                            onchange="loadLocation(this, 'representative_thana')"
+                                                            class="w-100 select2" required>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="mb-4">
+                                                        <label for="representative_thana">উপজেলা/থানা/পৌরসভা*</label>
+                                                        <select name="representative_thana" id="representative_thana"
+                                                            onchange="loadLocation(this, 'representative_ward')"
+                                                            class="w-100 select2" required>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="mb-4">
+                                                        <label for="representative_ward">ইউনিয়ন/ওয়ার্ড*</label>
+                                                        <select name="representative_ward" id="representative_ward"
+                                                            onchange="loadLocation(this, '')" class="w-100 select2"
+                                                            required>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid mt-4 mb-4">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-primary px-5 py-2"
+                        style="background-color: #006273; border:none; border-radius: 25px;"><i class="fa fa-save"></i>
+                        সাবমিট করুন</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="errorToast" class="toast text-bg-danger border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2({
+                allowClear: true
+            });
+
+            $('.datepicker').datepicker({
+                format: 'dd-mm-yyyy',
+                autoclose: true,
+                todayHighlight: true,
+                language: 'bn'
+
+            });
+
+            if(window.location.href.includes('eis')){
+                $('#page_link').attr('href', '{{eis_page}}');
+            } else {
+                $('#page_link').attr('href', '{{cf_page}}');
+            }
+
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "3000"
+            };
+
+
+            $("#factory_phone").on("change", function () {
+                this.value = this.value.replace(/[^0-9]/g, '');
+
+                let phone = $(this).val();
+
+                if (phone.length >= 11) {
+                    const bdPhoneRegex = /^01[3-9]\d{8}$/;
+
+                    if (!bdPhoneRegex.test(phone)) {
+                       return alert("Invalid Bangladeshi phone number! Example: 017xxxxxxxx");
+                    }
+                }
+            });
+            
+            $("#representative_phone").on("change", function () {
+                this.value = this.value.replace(/[^0-9]/g, '');
+
+                let phone = $(this).val();
+
+                if (phone.length >= 11) {
+                    const bdPhoneRegex = /^01[3-9]\d{8}$/;
+
+                    if (!bdPhoneRegex.test(phone)) {
+                       return alert("Invalid Bangladeshi phone number! Example: 017xxxxxxxx");
+                    }
+                }
+            });
+        });
+
+
+
+
+        document.getElementById('file-upload').addEventListener('change', function () {
+            const file = this.files[0];
+            const previewContainer = document.getElementById('file-preview');
+            previewContainer.innerHTML = ''; // Clear old preview
+
+            if (file) {
+                const fileDiv = document.createElement('div');
+                fileDiv.classList.add('d-flex', 'align-items-center', 'justify-content-between', 'p-2', 'border', 'rounded');
+                fileDiv.style.backgroundColor = '#f8f9fa';
+
+                const fileName = document.createElement('span');
+                fileName.textContent = file.name;
+                fileName.style.color = '#006273';
+                fileName.style.fontWeight = 'bold';
+                fileName.style.wordBreak = 'break-all';
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = '<i class="fa fa-times"></i>';
+                deleteBtn.classList.add('btn', 'btn-sm', 'btn-danger');
+                deleteBtn.style.marginLeft = '10px';
+                deleteBtn.onclick = function () {
+                    document.getElementById('file-upload').value = '';
+                    previewContainer.innerHTML = '';
+                };
+
+                fileDiv.appendChild(fileName);
+                fileDiv.appendChild(deleteBtn);
+                previewContainer.appendChild(fileDiv);
+            }
+        });
+    </script>
+    <script>
+        function loadLocation(object, domId) {
+            const parentId = object.value;
+            if (object.id === 'factory_division') {
+                $("#factory_district").val('');
+                $("#factory_district").trigger('change');
+                $("#factory_thana").val('');
+                $("#factory_thana").trigger('change');
+                $("#factory_ward").val('');
+                $("#factory_ward").trigger('change');
+            }
+            else if (object.id === 'factory_district') {
+                $("#factory_thana").val('');
+                $("#factory_thana").trigger('change');
+                $("#factory_ward").val('');
+                $("#factory_ward").trigger('change');
+            }
+            else if (object.id === 'factory_thana') {
+                $("#factory_ward").val('');
+                $("#factory_ward").trigger('change');
+            }
+
+
+            if (object.id === 'representative_division') {
+                $("#representative_district").val('');
+                $("#representative_district").trigger('change');
+                $("#representative_thana").val('');
+                $("#representative_thana").trigger('change');
+                $("#representative_ward").val('');
+                $("#representative_ward").trigger('change');
+            }
+            else if (object.id === 'representative_district') {
+                $("#representative_thana").val('');
+                $("#representative_thana").trigger('change');
+                $("#representative_ward").val('');
+                $("#representative_ward").trigger('change');
+            }
+            else if (object.id === 'representative_thana') {
+                $("#representative_ward").val('');
+                $("#representative_ward").trigger('change');
+            }
+
+
+            fetch(`${window.location.href}/api/get_locations?parent_id=${parentId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const locationsSelect = document.getElementById(domId);
+                    locationsSelect.innerHTML = ''; // clear previous options
+
+                    // Add default option
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = '';
+                    defaultOption.text = 'নির্বাচন করুন';
+                    locationsSelect.appendChild(defaultOption);
+
+                    // Populate new options
+                    data.forEach(loc => {
+                        const option = document.createElement('option');
+                        option.value = loc.id;
+                        option.text = loc.name;
+                        locationsSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching locations:', error));
+        }
+
+    </script>
+
+
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById('factoryForm');
+            if (!form) {
+                console.error('Form not found!');
+                return;
+            }
+            console.log('ekhane');
+            form.addEventListener('submit', validateForm);
+        });
+
+        function validateForm(event) {
+            console.log('ekhane'); // should now trigger
+            event.preventDefault();
+            const form = event.target;
+            let isValid = true;
+            let missingFields = [];
+
+            form.querySelectorAll('[required]').forEach(input => {
+                const label = form.querySelector(`label[for="${input.id}"]`);
+                if (!input.value.trim()) {
+                    if (label) {
+                        label.classList.add('label-error');
+                        missingFields.push(label.textContent.replace('*', '').trim());
+                    }
+                    isValid = false;
+                } else {
+                    if (label) label.classList.remove('label-error');
+                }
+            });
+
+            if (isValid) {
+                form.submit();
+            } else {
+                alert('Please fill required fields'); // simple test
+            }
+        }
+    </script>
+    
+
+</body>
+
+</html>

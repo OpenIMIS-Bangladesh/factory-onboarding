@@ -6,84 +6,289 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ফ্যাক্টরী নিবন্ধন </title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/select2.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/datepicker.css') }}">
+    <style>
+        :root {
+            --primary-color: #006273; /* Original Teal/Dark Cyan */
+            --secondary-color: #00a0b8; /* Lighter Teal */
+            --light-bg: #e9f1f3;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            --border-radius: 8px;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: #333;
+        }
+
+        /* Modern Card Styling */
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s;
+        }
+
+        .card-header {
+            background-color: white; /* Clean header background */
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+            font-size: 1.15rem;
+            color: var(--primary-color);
+        }
+
+        /* Floating Label Custom Input Redesign */
+        .custom-input, .custom-select {
+            position: relative;
+            margin-bottom: 2rem; /* Increased spacing */
+        }
+
+        .custom-input input, .custom-select select {
+            width: 100%;
+            padding: 10px 10px 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: white;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        /* Select2 override for better look */
+        .select2-container--default .select2-selection--single {
+            height: 44px !important;
+            padding-top: 5px !important;
+            border-radius: 5px !important;
+            border: 1px solid #ccc !important;
+        }
+
+        .custom-input label {
+            position: absolute;
+            top: 12px;
+            left: 15px;
+            color: #777;
+            pointer-events: none;
+            transition: 0.2s ease all;
+            background-color: white;
+            padding: 0 5px;
+        }
+
+        .custom-input input:focus ~ label,
+        .custom-input input:valid ~ label,
+        .custom-select select:focus ~ label,
+        .custom-select select:valid ~ label,
+        .custom-select select:not([value=""]) ~ label {
+            top: -10px;
+            left: 10px;
+            font-size: 0.75rem;
+            color: var(--primary-color);
+        }
+
+        .custom-input input:focus, .custom-select select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(0, 98, 115, 0.25);
+            outline: none;
+        }
+
+        /* Improved Icon Circle for Back Button */
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #eee;
+            background-color: #6d909e;
+            color: #fff;
+            transition: background-color 0.2s, color 0.2s;
+            margin-right: 15px;
+            margin-bottom: -8px;
+        }
+        .icon-circle:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Enhanced File Upload Area */
+        .file-upload-box {
+            height: 60px;
+            border: 2px dashed var(--secondary-color) !important;
+            background-color: #e9f8ff !important;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-radius: var(--border-radius);
+        }
+        .file-upload-box:hover {
+            background-color: #d8f1ff !important;
+        }
+
+        /* Sticky Instructions */
+        .sticky-instructions {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+        }
+        .sticky-instructions ul {
+            list-style: disc inside;
+            padding-left: 1rem;
+        }
+
+        /* Progress Stepper (New UX Feature) */
+        .step-progress {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+        .step-progress::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: #ddd;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+            width: 30%;
+        }
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ddd;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            transition: background 0.3s;
+            margin-bottom: 5px;
+        }
+        .step-text {
+            font-size: 0.85rem;
+            color: #777;
+            text-align: center;
+        }
+        .step.active .step-icon {
+            background: var(--primary-color);
+        }
+        .step.completed .step-icon {
+            background: var(--secondary-color);
+        }
+        input{
+            background: transparent;
+        }
+        select{
+            background: transparent;
+        }
+    </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="{{ url_for('static', filename='jquery/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </head>
 
 <body>
     {% if error %}
-    <div class="container-fluid mt-4" id="error_message" onclick="$(this).remove()" style="cursor: pointer;">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-danger text-light text-center">
-                        <span>i<h5 class="d-inline text-light"> {{ message }}</h5></span>
-                    </div>
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+        <div id="liveToast" class="toast show text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-exclamation-triangle me-2"></i> <strong>ত্রুটি:</strong> {{ message }}
                 </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         </div>
     </div>
+    <script>
+        // Auto-remove the error notification after a delay (if not using Toastr for all messages)
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('#liveToast').toast('hide');
+            }, 5000);
+        });
+    </script>
     {% endif %}
-
-    <div class="container-fluid bg-light py-3" style="position: sticky; z-index: 2000; top: 0; left: 0;">
+    <div class="container my-4">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header text-light" style="background-color: #006273;">
-                        <p>
-                            <ul class="text-left text-light">
-                                <li>ফ্যাক্টরীর সঠিক তথ্য এবং প্রতিনিধির জাতীয় পরিচয়পত্র অনুযায়ী তথ্য দিয়ে নিবন্ধনের আবেদন সম্পন্ন করুন।</li>
-                                <li>সফলভাবে নিবন্ধনের আবেদন সংশ্লিষ্ট এসোসিয়েশন কর্তৃক অনুমোদিত হবে।</li>
-                                <li>অনুমোদন সাপেক্ষে আপনার প্রদত্ত ইমেইলে আইডি এবং পাসওয়ার্ড পাঠানো হবে।</li>
-                                <li>ইমেইলে পাওয়া আইডি এবং পাসওয়ার্ড ব্যবহার করে আপনি ফ্যাক্টরীর প্রতিনিধি হিসেবে লগ ইন করতে পারবেন <a href="" id="page_link" class="text-reset text-decoration-underline">এই লিংকে</a></li>
-                            </ul>
-                        </p>
-                    </div> 
+                <div class="p-3 sticky-instructions">
+                    <p class="mb-2 fs-6 fw-bold"><i class="fas fa-info-circle me-2"></i> গুরুত্বপূর্ণ নির্দেশনা</p>
+                    <ul class="text-left small">
+                        <li>ফ্যাক্টরীর সঠিক তথ্য এবং প্রতিনিধির জাতীয় পরিচয়পত্র অনুযায়ী তথ্য দিয়ে **নিবন্ধনের আবেদন** সম্পন্ন করুন।</li>
+                        <li>সফলভাবে নিবন্ধনের আবেদন সংশ্লিষ্ট **এসোসিয়েশন কর্তৃক অনুমোদিত** হবে।</li>
+                        <li>অনুমোদন সাপেক্ষে আপনার প্রদত্ত ইমেইলে আইডি এবং পাসওয়ার্ড পাঠানো হবে।</li>
+                        <li>ইমেইলে পাওয়া আইডি এবং পাসওয়ার্ড ব্যবহার করে আপনি ফ্যাক্টরীর প্রতিনিধি হিসেবে লগ ইন করতে পারবেন <a href="" id="page_link" class="text-reset text-decoration-underline fw-bold">এই লিংকে</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="container-fluid mt-4">
+    <div class="container-fluid bg-white py-3 shadow-sm sticky-top" style="z-index: 1020;">
         <div class="row">
-            <div class="col-md-12">
-                <div class="card shadow-sm">
-                    <div class="card-header text-left">
-                        <button class="icon-circle" onclick="window.location.href.includes('eis')?window.location.href='{{eis_page}}':window.location.href='{{cf_page}}'">
-                            <i class="fas fa-angle-left"></i>
-                        </button>
-                        <span><h5 class="d-inline">ফ্যাক্টরী নিবন্ধন </h5></span>
+            <div class="col-md-12 d-flex flex-column justify-content-center">
+                <div class="step-progress">
+                    <div class="step active" id="step-1">
+                        <div class="step-icon">১</div>
+                        <div class="step-text">ফ্যাক্টরীর তথ্য দিন</div>
+                    </div>
+                    <div class="step" id="step-2">
+                        <div class="step-icon">২</div>
+                        <div class="step-text">প্রতিনিধির তথ্য দিন</div>
+                    </div>
+                    <div class="step" id="step-3">
+                        <div class="step-icon">৩</div>
+                        <div class="step-text">জমা দিন</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <form action="{{url_alias}}/submit_form" id="factoryForm" method="POST" enctype="multipart/form-data">
-        <div class="container-fluid mt-4">
-            <div class="row">
+
+
+    <div class="container mt-4">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="d-flex align-items-center">
+                    <button class="icon-circle btn p-0" onclick="window.location.href.includes('eis')?window.location.href='{{eis_page}}':window.location.href='{{cf_page}}'">
+                        <i class="fas fa-arrow-left"></i> </button>
+                    <h2 class="d-inline mb-0 text-dark">ফ্যাক্টরী নিবন্ধন আবেদন ✍️</h2>
+                </div>
+                <hr class="mt-2">
+            </div>
+        </div>
+
+
+
+        <form action="{{url_alias}}/submit_form" id="factoryForm" method="POST" enctype="multipart/form-data">
+            <div class="row" id="form-section-1">
                 <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header py-4">
-                            <span>ফ্যাক্টরীর তথ্য</span>
+                    <div class="card mb-4">
+                        <div class="card-header py-3 bg-white d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-building me-2"></i> ফ্যাক্টরীর মৌলিক তথ্য</span>
+                            <span class="badge badge-factory text-bg-primary">ধাপ ১/২</span>
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-lg-6">
                                     <div class="custom-select w-100">
-                                        <select id="association" name="association" required>
+                                        <label for="association">প্রতিষ্ঠান/ কারখানার অ্যাসোসিয়েশন*</label>
+                                        <select id="association" name="association" class="w-100 select2" required>
                                             <option class="select-items" value="" disabled selected hidden></option>
                                             <option class="select-items" value="BGMEA" {{ "selected" if form_data and form_data.get('association')=="BGMEA" else "" }}>BGMEA</option>
                                             <option class="select-items" value="BKMEA" {{ "selected" if form_data and form_data.get('association')=="BKMEA" else "" }}>BKMEA</option>
                                             <option class="select-items" value="BEPZA" {{ "selected" if form_data and form_data.get('association')=="BEPZA" else "" }}>BEPZA</option>
                                         </select>
-                                        <label for="association">প্রতিষ্ঠান/ কারখানার অ্যাসোসিয়েশনের ধরণ *</label>
                                     </div>
                                     <div class="custom-input w-100">
                                         <input type="text" id="factory_name_en" name="factory_name_en" value="{{ form_data.get('factory_name_en') if form_data else "" }}" required>
@@ -94,7 +299,7 @@
                                         <label for="factory_phone">ফোন নম্বর</label>
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-lg-6">
                                     <div class="custom-input w-100">
                                         <input type="text" id="factory_name_bn" name="factory_name_bn" value="{{ form_data.get('factory_name_bn') if form_data else "" }}" required>
                                         <label for="factory_name_bn">প্রতিষ্ঠান/ কারখানার নাম (বাংলা)*</label>
@@ -105,89 +310,81 @@
                                     </div>
                                     <div class="custom-input w-100">
                                         <input type="text" id="factory_web" name="factory_web" value="{{ form_data.get('factory_web') if form_data else "" }}">
-                                        <label for="factory_web">ওয়েবসাইট</label>
+                                        <label for="factory_web">ওয়েবসাইট</label>
                                     </div>
                                 </div>
-                                <div class="col-12 mt-4">
-                                    <div class="form-group">
-                                        <label for="file_upload">কারখানার মেম্বারশিপ সার্টিফিকেট আপলোড করুন *</label>
-                                        <input type="file" style="display: none;" name="file_upload" id="file-upload"
-                                            required>
-                                        <!-- <input style="display: none;" id="camera-upload" capture="environment" accept="image/*" > -->
-                                        <div class="card mt-2 d-flex flex-column justify-content-center align-items-center"
-                                            style="height: 40px; border: 2px dashed #2e7d82; background-color: rgb(239, 255, 255);">
-                                            <div class="d-inline">
-                                                <span
-                                                    style="border:none; background-color: transparent; cursor: pointer;"
-                                                    onclick="document.getElementById('file-upload').click();"><i
-                                                        class="fa fa-upload"></i> আপলোড করুন</span>
-                                                <!-- <span class="ms-4" style="border:none; background-color: transparent; cursor: pointer;" onclick="document.getElementById('camera-upload').click();"><i class="fa fa-camera"></i> ছবি তুলুন </span> -->
-                                            </div>
-                                        </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <label for="file_upload" class="form-label fw-bold">কারখানার মেম্বারশিপ সার্টিফিকেট আপলোড করুন * <i class="fas fa-question-circle text-muted ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="মেম্বারশিপ সার্টিফিকেটটি PDF বা JPEG ফরম্যাটে আপলোড করুন।"></i>
+                                    </label>
+                                    <input type="file" style="display: none;" name="file_upload" id="file-upload" required accept=".pdf, .jpg, .jpeg, .png">
+                                    <div class="card mt-2 d-flex flex-row justify-content-center align-items-center file-upload-box" onclick="document.getElementById('file-upload').click();">
+                                        <i class="fa fa-cloud-upload-alt me-2 fs-5"></i>
+                                        <span>ফাইল আপলোড করতে ক্লিক করুন</span>
                                     </div>
-                                    <!-- Preview area -->
                                     <div id="file-preview" class="mt-2">
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card mb-4">
+                        <div class="card-header py-3 bg-white">
+                            <span><i class="fas fa-map-marker-alt me-2"></i> ফ্যাক্টরীর ঠিকানা</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="factory_address" name="factory_address" value="{{ form_data.get('factory_address') if form_data else "" }}" required>
+                                        <label for="factory_address">গ্রাম/ প্লট/ বাড়ি/ রাস্তা*</label>
                                     </div>
                                 </div>
-
-                                <div class="col-12 mt-5">
-                                    <div class="card border-1 shadow-sm">
-                                        <div class="card-header">
-                                            <span>ফ্যাক্টরীর ঠিকানা</span>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="custom-input w-100">
-                                                        <input type="text" id="factory_address" name="factory_address" value="{{ form_data.get('factory_address') if form_data else "" }}"
-                                                            required>
-                                                        <label for="factory_address">গ্রাম/ প্লট/ বাড়ি/ রাস্তা*</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="mb-4">
-                                                        <label for="factory_division">বিভাগ*</label>
-                                                        <select name="factory_division" id="factory_division"
-                                                            onchange="loadLocation(this, 'factory_district')"
-                                                            class="w-100 select2" required>
-                                                            <option value="">নির্বাচন করুন</option>
-                                                            {% for location in locations %}
-                                                            <option value="{{ location.LocationId }}" {{ "selected" if form_data and form_data.get('factory_division') else "" }}>{{
-                                                                location.LocationName }}</option>
-                                                            {% endfor %}
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="mb-4">
-                                                        <label for="factory_district">জেলা/সিটি কর্পোরেশন*</label>
-                                                        <select name="factory_district" id="factory_district"
-                                                            onchange="loadLocation(this, 'factory_thana')"
-                                                            class="w-100 select2" required>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="mb-4">
-                                                        <label for="factory_thana">উপজেলা/থানা/পৌরসভা*</label>
-                                                        <select name="factory_thana" id="factory_thana"
-                                                            onchange="loadLocation(this, 'factory_ward')"
-                                                            class="w-100 select2" required>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="mb-4">
-                                                        <label for="factory_ward">ইউনিয়ন/ওয়ার্ড*</label>
-                                                        <select name="factory_ward" id="factory_ward"
-                                                            onchange="loadLocation(this, '')" class="w-100 select2"
-                                                            required>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <label for="factory_division" class="form-label small text-muted">বিভাগ*</label>
+                                        <select name="factory_division" id="factory_division"
+                                            onchange="loadLocation(this, 'factory_district')"
+                                            class="w-100 select2" required>
+                                            <option value="">নির্বাচন করুন</option>
+                                            {% for location in locations %}
+                                            <option value="{{ location.LocationId }}" {{ "selected" if form_data and form_data.get('factory_division') else "" }}>{{
+                                                location.LocationName }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <label for="factory_district" class="form-label small text-muted">জেলা/সিটি কর্পোরেশন*</label>
+                                        <select name="factory_district" id="factory_district"
+                                            onchange="loadLocation(this, 'factory_thana')"
+                                            class="w-100 select2" required>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <label for="factory_thana" class="form-label small text-muted">উপজেলা/থানা/পৌরসভা*</label>
+                                        <select name="factory_thana" id="factory_thana"
+                                            onchange="loadLocation(this, 'factory_ward')"
+                                            class="w-100 select2" required>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <label for="factory_ward" class="form-label small text-muted">ইউনিয়ন/ওয়ার্ড*</label>
+                                        <select name="factory_ward" id="factory_ward"
+                                            onchange="loadLocation(this, '')" class="w-100 select2"
+                                            required>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -195,74 +392,74 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="container-fluid mt-4">
-            <div class="row">
+
+            <div class="row" id="form-section-2">
                 <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header py-4">
-                            <span>ফ্যাক্টরী প্রতিনিধির তথ্য</span>
+                    <div class="card mb-4">
+                        <div class="card-header py-3 bg-white d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-user-tie me-2"></i> ফ্যাক্টরী প্রতিনিধির তথ্য</span>
+                            <span class="badge badge-representative text-bg-secondary">ধাপ ২/২</span>
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-lg-6">
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_name" name="representative_name" value="{{ form_data.get('representative_name') if form_data else "" }}" required>
+                                        <input type="text" id="representative_name" name="representative_name" value="{{ form_data.get('representative_name') if form_data else '' }}" required>
                                         <label for="representative_name">প্রতিনিধির নাম (ইংরেজি)*</label>
                                     </div>
                                     <div class="custom-input w-100">
                                         <input type="text" id="representative_designation"
-                                            name="representative_designation" value="{{ form_data.get('representative_designation') if form_data else "" }}" required>
+                                            name="representative_designation" value="{{ form_data.get('representative_designation') if form_data else '' }}" required>
                                         <label for="representative_designation">পদবী*</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_email" name="representative_email" value="{{ form_data.get('representative_email') if form_data else "" }}">
+                                        <input type="text" id="representative_email" name="representative_email" value="{{ form_data.get('representative_email') if form_data else '' }}">
                                         <label for="representative_email">ই-মেইল</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_passport" name="representative_passport" value="{{ form_data.get('representative_passport') if form_data else "" }}">
+                                        <input type="text" id="representative_passport" name="representative_passport" value="{{ form_data.get('representative_passport') if form_data else '' }}">
                                         <label for="representative_passport">পাসপোর্ট নম্বর</label>
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-lg-6">
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_name_bn" name="representative_name_bn" value="{{ form_data.get('representative_name_bn') if form_data else "" }}"
+                                        <input type="text" id="representative_name_bn" name="representative_name_bn" value="{{ form_data.get('representative_name_bn') if form_data else '' }}"
                                             required>
                                         <label for="representative_name_bn">প্রতিনিধির নাম (বাংলা)*</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_phone" name="representative_phone" value="{{ form_data.get('representative_phone') if form_data else "" }}" required>
-                                        <label for="representative_phone">ফোন নম্বর (লগইন ইউজারনেম হিসেবে ব্যবহৃত
-                                            হবে)*</label>
+                                        <input type="text" id="representative_phone" name="representative_phone" value="{{ form_data.get('representative_phone') if form_data else '' }}" required>
+                                        <label for="representative_phone">ফোন নম্বর (লগইন ইউজারনেম হিসেবে ব্যবহৃত হবে)*</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_nid" name="representative_nid" value="{{ form_data.get('representative_nid') if form_data else "" }}" required>
-                                        <label for="representative_nid">জাতীয় পরিচয়পত্র নম্বর*</label>
+                                        <input type="text" id="representative_nid" name="representative_nid" value="{{ form_data.get('representative_nid') if form_data else '' }}" required>
+                                        <label for="representative_nid">জাতীয় পরিচয়পত্র নম্বর*</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" class="datepicker" id="representative_dob" value="{{ form_data.get('representative_dob') if form_data else "" }}"
+                                        <input type="text" class="datepicker" id="representative_dob" value="{{ form_data.get('representative_dob') if form_data else '' }}"
                                             name="representative_dob">
                                         <label for="representative_dob">জন্মতারিখ</label>
                                     </div>
                                 </div>
-                                <div class="col-12 mt-5">
-                                    <div class="card border-1 shadow-sm">
-                                        <div class="card-header">
-                                            <span>ফ্যাক্টরী প্রতিনিধির ঠিকানা</span>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <div class="card border shadow-none">
+                                        <div class="card-header bg-light">
+                                            <span class="small fw-bold"><i class="fas fa-home me-2"></i> প্রতিনিধির ঠিকানা</span>
                                         </div>
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="custom-input w-100">
                                                         <input type="text" id="representative_address"
-                                                            name="representative_address" value="{{ form_data.get('representative_address') if form_data else "" }}" required>
-                                                        <label for="representative_address">গ্রাম/ প্লট/ বাড়ি/
-                                                            রাস্তা*</label>
+                                                            name="representative_address" value="{{ form_data.get('representative_address') if form_data else '' }}" required>
+                                                        <label for="representative_address">গ্রাম/ প্লট/ বাড়ি/ রাস্তা*</label>
                                                     </div>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-lg-6">
                                                     <div class="mb-4">
-                                                        <label for="representative_division">বিভাগ*</label>
+                                                        <label for="representative_division" class="form-label small text-muted">বিভাগ*</label>
                                                         <select name="representative_division"
                                                             id="representative_division"
                                                             onchange="loadLocation(this, 'representative_district')"
@@ -275,10 +472,9 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-lg-6">
                                                     <div class="mb-4">
-                                                        <label for="representative_district">জেলা/সিটি
-                                                            কর্পোরেশন*</label>
+                                                        <label for="representative_district" class="form-label small text-muted">জেলা/সিটি কর্পোরেশন*</label>
                                                         <select name="representative_district"
                                                             id="representative_district"
                                                             onchange="loadLocation(this, 'representative_thana')"
@@ -286,18 +482,18 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-lg-6">
                                                     <div class="mb-4">
-                                                        <label for="representative_thana">উপজেলা/থানা/পৌরসভা*</label>
+                                                        <label for="representative_thana" class="form-label small text-muted">উপজেলা/থানা/পৌরসভা*</label>
                                                         <select name="representative_thana" id="representative_thana"
                                                             onchange="loadLocation(this, 'representative_ward')"
                                                             class="w-100 select2" required>
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-lg-6">
                                                     <div class="mb-4">
-                                                        <label for="representative_ward">ইউনিয়ন/ওয়ার্ড*</label>
+                                                        <label for="representative_ward" class="form-label small text-muted">ইউনিয়ন/ওয়ার্ড*</label>
                                                         <select name="representative_ward" id="representative_ward"
                                                             onchange="loadLocation(this, '')" class="w-100 select2"
                                                             required>
@@ -313,18 +509,18 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="container-fluid mt-4 mb-4">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <button type="submit" class="btn btn-primary px-5 py-2"
-                        style="background-color: #006273; border:none; border-radius: 25px;"><i class="fa fa-save"></i>
-                        সাবমিট করুন</button>
+
+            <div class="container-fluid mt-4 mb-5">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button type="submit" class="btn btn-lg px-5 py-3 text-light"
+                            style="background-color: var(--primary-color); border:none; border-radius: 50px; font-weight: bold;"><i class="fa fa-paper-plane me-2"></i>
+                            নিবন্ধন আবেদন জমা দিন</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
-
+        </form>
+    </div>
 
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
         <div id="errorToast" class="toast text-bg-danger border-0" role="alert" aria-live="assertive"
@@ -340,21 +536,25 @@
     </div>
 
 
-
-
-
     <script>
         $(document).ready(function () {
+            // Initialize Select2 and Tooltips
             $('.select2').select2({
-                allowClear: true
+                allowClear: true,
+                placeholder: "নির্বাচন করুন" // Added placeholder for Select2
             });
+
+            // Initialize all tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
 
             $('.datepicker').datepicker({
                 format: 'dd-mm-yyyy',
                 autoclose: true,
                 todayHighlight: true,
                 language: 'bn'
-
             });
 
             if(window.location.href.includes('eis')){
@@ -363,6 +563,7 @@
                 $('#page_link').attr('href', '{{cf_page}}');
             }
 
+            // Toastr Setup (Original functionality kept)
             toastr.options = {
                 "closeButton": true,
                 "progressBar": true,
@@ -370,39 +571,41 @@
                 "timeOut": "3000"
             };
 
-
-            $("#factory_phone").on("change", function () {
+            // Phone Number Validation (Original functionality kept)
+            $("#factory_phone, #representative_phone").on("change", function () {
                 this.value = this.value.replace(/[^0-9]/g, '');
-
                 let phone = $(this).val();
 
-                if (phone.length >= 11) {
+                if (phone.length > 0 && phone.length < 11) {
+                    toastr.error("ফোন নম্বর অবশ্যই ১১-সংখ্যার হতে হবে।");
+                } else if (phone.length >= 11) {
                     const bdPhoneRegex = /^01[3-9]\d{8}$/;
-
                     if (!bdPhoneRegex.test(phone)) {
-                       return alert("Invalid Bangladeshi phone number! Example: 017xxxxxxxx");
+                       // Use toastr for non-blocking error display
+                       toastr.error("ভুল বাংলাদেশি ফোন নম্বর! উদাহরণ: 017xxxxxxxx");
                     }
                 }
             });
-            
-            $("#representative_phone").on("change", function () {
-                this.value = this.value.replace(/[^0-9]/g, '');
 
-                let phone = $(this).val();
-
-                if (phone.length >= 11) {
-                    const bdPhoneRegex = /^01[3-9]\d{8}$/;
-
-                    if (!bdPhoneRegex.test(phone)) {
-                       return alert("Invalid Bangladeshi phone number! Example: 017xxxxxxxx");
-                    }
+            // UX Feature: Form Step Visual Update on Scroll/Focus (Optional)
+            // For simplicity and not adding new complex dependencies, I'm using a static step visual.
+            // If the user scrolls down to representative info, we can mark step 2 active.
+            $(window).scroll(function() {
+                var repSectionTop = $('#form-section-2').offset().top;
+                var scrollTop = $(window).scrollTop();
+                if (scrollTop > repSectionTop - 300) { // Adjust 300px buffer
+                    $('#step-1').removeClass('active').addClass('completed');
+                    $('.badge-factory').removeClass('text-bg-secondary').addClass('text-bg-primary');
+                    $('#step-2').addClass('active');
+                } else {
+                    $('#step-1').addClass('active').removeClass('completed');
+                    $('.badge-representative').removeClass('text-bg-secondary').addClass('text-bg-primary');
+                    $('#step-2').removeClass('active');
                 }
             });
         });
 
-
-
-
+        // File Upload Preview (Improved Look)
         document.getElementById('file-upload').addEventListener('change', function () {
             const file = this.files[0];
             const previewContainer = document.getElementById('file-preview');
@@ -410,142 +613,74 @@
 
             if (file) {
                 const fileDiv = document.createElement('div');
-                fileDiv.classList.add('d-flex', 'align-items-center', 'justify-content-between', 'p-2', 'border', 'rounded');
-                fileDiv.style.backgroundColor = '#f8f9fa';
+                fileDiv.classList.add('d-flex', 'align-items-center', 'justify-content-between', 'p-3', 'border', 'rounded', 'bg-white', 'shadow-sm');
 
-                const fileName = document.createElement('span');
-                fileName.textContent = file.name;
-                fileName.style.color = '#006273';
-                fileName.style.fontWeight = 'bold';
-                fileName.style.wordBreak = 'break-all';
+                const fileInfo = document.createElement('div');
+                fileInfo.innerHTML = `<i class="fa fa-file-alt me-2 text-primary"></i> <span style="font-weight: bold; color: var(--primary-color); word-break: break-all;">${file.name}</span> <span class="text-muted small">(${(file.size / 1024).toFixed(2)} KB)</span>`;
 
                 const deleteBtn = document.createElement('button');
                 deleteBtn.innerHTML = '<i class="fa fa-times"></i>';
-                deleteBtn.classList.add('btn', 'btn-sm', 'btn-danger');
-                deleteBtn.style.marginLeft = '10px';
+                deleteBtn.classList.add('btn', 'btn-sm', 'btn-outline-danger');
+                deleteBtn.style.marginLeft = '15px';
                 deleteBtn.onclick = function () {
                     document.getElementById('file-upload').value = '';
                     previewContainer.innerHTML = '';
                 };
 
-                fileDiv.appendChild(fileName);
+                fileDiv.appendChild(fileInfo);
                 fileDiv.appendChild(deleteBtn);
                 previewContainer.appendChild(fileDiv);
             }
         });
-    </script>
-    <script>
+
+        // Location Load Function (Original functionality kept)
         function loadLocation(object, domId) {
             const parentId = object.value;
-            if (object.id === 'factory_division') {
-                $("#factory_district").val('');
-                $("#factory_district").trigger('change');
-                $("#factory_thana").val('');
-                $("#factory_thana").trigger('change');
-                $("#factory_ward").val('');
-                $("#factory_ward").trigger('change');
-            }
-            else if (object.id === 'factory_district') {
-                $("#factory_thana").val('');
-                $("#factory_thana").trigger('change');
-                $("#factory_ward").val('');
-                $("#factory_ward").trigger('change');
-            }
-            else if (object.id === 'factory_thana') {
-                $("#factory_ward").val('');
-                $("#factory_ward").trigger('change');
-            }
+            // Clear subsequent fields
+            const fieldMap = {
+                'factory_division': ['factory_district', 'factory_thana', 'factory_ward'],
+                'factory_district': ['factory_thana', 'factory_ward'],
+                'factory_thana': ['factory_ward'],
+                'representative_division': ['representative_district', 'representative_thana', 'representative_ward'],
+                'representative_district': ['representative_thana', 'representative_ward'],
+                'representative_thana': ['representative_ward']
+            };
 
+            (fieldMap[object.id] || []).forEach(id => {
+                $("#" + id).val('').trigger('change');
+                // Ensure only one default option is present
+                $("#" + id).html('<option value="">নির্বাচন করুন</option>').select2('destroy').select2({allowClear: true, placeholder: "নির্বাচন করুন"});
+            });
 
-            if (object.id === 'representative_division') {
-                $("#representative_district").val('');
-                $("#representative_district").trigger('change');
-                $("#representative_thana").val('');
-                $("#representative_thana").trigger('change');
-                $("#representative_ward").val('');
-                $("#representative_ward").trigger('change');
-            }
-            else if (object.id === 'representative_district') {
-                $("#representative_thana").val('');
-                $("#representative_thana").trigger('change');
-                $("#representative_ward").val('');
-                $("#representative_ward").trigger('change');
-            }
-            else if (object.id === 'representative_thana') {
-                $("#representative_ward").val('');
-                $("#representative_ward").trigger('change');
-            }
-
+            if (!domId) return; // Stop if no next field
 
             fetch(`${window.location.href}/api/get_locations?parent_id=${parentId}`)
                 .then(response => response.json())
                 .then(data => {
                     const locationsSelect = document.getElementById(domId);
-                    locationsSelect.innerHTML = ''; // clear previous options
+                    locationsSelect.innerHTML = '';
 
-                    // Add default option
                     const defaultOption = document.createElement('option');
                     defaultOption.value = '';
                     defaultOption.text = 'নির্বাচন করুন';
                     locationsSelect.appendChild(defaultOption);
 
-                    // Populate new options
                     data.forEach(loc => {
                         const option = document.createElement('option');
                         option.value = loc.id;
                         option.text = loc.name;
                         locationsSelect.appendChild(option);
                     });
+                    // Reinitialize select2 to recognize new options
+                    $('#' + domId).select2({allowClear: true, placeholder: "নির্বাচন করুন"});
+
                 })
-                .catch(error => console.error('Error fetching locations:', error));
-        }
-
-    </script>
-
-
-    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const form = document.getElementById('factoryForm');
-            if (!form) {
-                console.error('Form not found!');
-                return;
-            }
-            console.log('ekhane');
-            form.addEventListener('submit', validateForm);
-        });
-
-        function validateForm(event) {
-            console.log('ekhane'); // should now trigger
-            event.preventDefault();
-            const form = event.target;
-            let isValid = true;
-            let missingFields = [];
-
-            form.querySelectorAll('[required]').forEach(input => {
-                const label = form.querySelector(`label[for="${input.id}"]`);
-                if (!input.value.trim()) {
-                    if (label) {
-                        label.classList.add('label-error');
-                        missingFields.push(label.textContent.replace('*', '').trim());
-                    }
-                    isValid = false;
-                } else {
-                    if (label) label.classList.remove('label-error');
-                }
-            });
-
-            if (isValid) {
-                form.submit();
-            } else {
-                alert('Please fill required fields'); // simple test
-            }
+                .catch(error => {
+                    //toastr.error('ঠিকানার তথ্য লোড করতে ব্যর্থ: ' + error);
+                    console.error('Error fetching locations:', error);
+                });
         }
     </script>
-    
-
 </body>
 
 </html>
