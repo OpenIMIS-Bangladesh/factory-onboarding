@@ -1,7 +1,7 @@
 from flask import Flask, render_template, session, request, redirect, flash, jsonify, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID, JSON
-from datetime import datetime
+from datetime import datetime, date
 from dotenv import load_dotenv
 import uuid
 import requests
@@ -80,6 +80,20 @@ class Factories(db.Model):
     workforce_representative_id = db.Column(db.String(50))
     is_same_company_representative = db.Column(db.Integer, default=0)
     association_type = db.Column(db.String(100))
+    group_name = db.Column(db.String(255))
+    license_type = db.Column(db.String(100))
+    office_location_id= db.Column(db.Integer)
+    future_date = db.Column(db.DateTime)
+    date_of_eis_incorporation = db.Column(db.DateTime)
+    date_of_factory_establishment = db.Column(db.DateTime)
+    membership_no = db.Column(db.String(100))
+    business_sector = db.Column(db.String(100))
+    license_no = db.Column(db.String(100))
+    lima_registration_number = db.Column(db.String(100))
+    approximate_number_of_employee = db.Column(db.Integer)
+    office_address = db.Column(db.Text)
+    
+
 
     def __repr__(self):
         return f"<Factories {self.name_bn}>"
@@ -360,6 +374,22 @@ def submit_form():
     factory_address = request.form.get('factory_address') if request.form.get('factory_address')!="" else None
     factory_location = request.form.get('factory_ward') if request.form.get('factory_ward')!="" else None
 
+    #new fields
+    group_name = request.form.get('group_name') if request.form.get('group_name')!="" else None
+    license_type = request.form.get('license_type') if request.form.get('license_type')!="" else None
+    office_location_id= request.form.get('office_ward') if request.form.get('office_ward')!="" else None
+    # future_date = request.form.get('future_date') if request.form.get('future_date')!="" else None
+    # date_of_eis_incorporation = request.form.get('date_of_eis_incorporation') if request.form.get('date_of_eis_incorporation')!="" else None
+    date_of_factory_establishment_str = request.form.get('date_of_factory_establishment') if request.form.get('date_of_factory_establishment')!="" else None
+    date_of_factory_establishment_obj = datetime.strptime(date_of_factory_establishment_str, "%d-%m-%Y")
+    date_of_factory_establishment = date_of_factory_establishment_obj.strftime("%Y-%m-%d")
+    membership_no = request.form.get('membership_no') if request.form.get('membership_no')!="" else None
+    business_sector = request.form.get('business_sector') if request.form.get('business_sector')!="" else None
+    license_no = request.form.get('license_no') if request.form.get('license_no')!="" else None
+    lima_registration_number = request.form.get('lima_registration_number') if request.form.get('lima_registration_number')!="" else None
+    approximate_number_of_employee = request.form.get('approximate_number_of_employee') if request.form.get('approximate_number_of_employee')!="" else None
+    office_address = request.form.get('office_address') if request.form.get('office_address')!="" else None
+
     # Representative Information
     representative_name = request.form.get('representative_name') if request.form.get('representative_name')!="" else None
     representative_name_bn = request.form.get('representative_name_bn') if request.form.get('representative_name_bn')!="" else None
@@ -439,8 +469,7 @@ def submit_form():
         userRoleQ= UserRoles.query.filter_by(UserID=user.UserID).first()
 
 
-        birth_date_str = request.form.get('representative_dob')
-        birth_date_str= '10-10-1996'
+        birth_date_str = request.form.get('representative_dob') if request.form.get('representative_dob')!="" else "10-10-1996"
         birth_date_obj = datetime.strptime(birth_date_str, "%d-%m-%Y")
         birth_date_formatted = birth_date_obj.strftime("%Y-%m-%d")
 
@@ -483,6 +512,21 @@ def submit_form():
             workforce_employer_id = None,
             workforce_representative_id = representative.UUID,
             association_type = association,
+
+            #new fields
+            group_name = group_name,
+            license_type = license_type,
+            office_location_id= office_location_id,
+            # future_date = future_date,
+            # date_of_eis_incorporation = date_of_eis_incorporation,
+            date_of_eis_incorporation = datetime.now(),
+            date_of_factory_establishment = date_of_factory_establishment,
+            membership_no = membership_no,
+            business_sector = business_sector,
+            license_no = license_no,
+            lima_registration_number = lima_registration_number,
+            approximate_number_of_employee = approximate_number_of_employee,
+            office_address = office_address
         )
 
         db.session.add(factory)

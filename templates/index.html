@@ -6,188 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ফ্যাক্টরী নিবন্ধন </title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/select2.css') }}">
-    <style>
-        :root {
-            --primary-color: #006273; /* Original Teal/Dark Cyan */
-            --secondary-color: #00a0b8; /* Lighter Teal */
-            --light-bg: #e9f1f3;
-            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-            --border-radius: 8px;
-        }
-
-        body {
-            background-color: var(--light-bg);
-            color: #333;
-        }
-
-        /* Modern Card Styling */
-        .card {
-            border: none;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
-            transition: transform 0.2s;
-        }
-
-        .card-header {
-            background-color: white; /* Clean header background */
-            border-bottom: 1px solid #eee;
-            font-weight: 600;
-            font-size: 1.15rem;
-            color: var(--primary-color);
-        }
-
-        /* Floating Label Custom Input Redesign */
-        .custom-input, .custom-select {
-            position: relative;
-            margin-bottom: 2rem; /* Increased spacing */
-        }
-
-        .custom-input input, .custom-select select {
-            width: 100%;
-            padding: 10px 10px 10px 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-            background-color: white;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        /* Select2 override for better look */
-        .select2-container--default .select2-selection--single {
-            height: 44px !important;
-            padding-top: 5px !important;
-            border-radius: 5px !important;
-            border: 1px solid #ccc !important;
-        }
-
-        .custom-input label {
-            position: absolute;
-            top: 12px;
-            left: 15px;
-            color: #777;
-            pointer-events: none;
-            transition: 0.2s ease all;
-            background-color: white;
-            padding: 0 5px;
-        }
-
-        .custom-input input:focus ~ label,
-        .custom-input input:valid ~ label,
-        .custom-select select:focus ~ label,
-        .custom-select select:valid ~ label,
-        .custom-select select:not([value=""]) ~ label {
-            top: -10px;
-            left: 10px;
-            font-size: 0.75rem;
-            color: var(--primary-color);
-        }
-
-        .custom-input input:focus, .custom-select select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(0, 98, 115, 0.25);
-            outline: none;
-        }
-
-        /* Improved Icon Circle for Back Button */
-        .icon-circle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 1px solid #eee;
-            background-color: #6d909e;
-            color: #fff;
-            transition: background-color 0.2s, color 0.2s;
-            margin-right: 15px;
-            margin-bottom: -8px;
-        }
-        .icon-circle:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        /* Enhanced File Upload Area */
-        .file-upload-box {
-            height: 60px;
-            border: 2px dashed var(--secondary-color) !important;
-            background-color: #e9f8ff !important;
-            color: var(--primary-color);
-            cursor: pointer;
-            transition: background-color 0.2s;
-            border-radius: var(--border-radius);
-        }
-        .file-upload-box:hover {
-            background-color: #d8f1ff !important;
-        }
-
-        /* Sticky Instructions */
-        .sticky-instructions {
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
-        }
-        .sticky-instructions ul {
-            list-style: disc inside;
-            padding-left: 1rem;
-        }
-
-        /* Progress Stepper (New UX Feature) */
-        .step-progress {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-        }
-        .step-progress::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 10%;
-            right: 10%;
-            height: 3px;
-            background: #ddd;
-            transform: translateY(-50%);
-            z-index: 1;
-        }
-        .step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 2;
-            width: 30%;
-        }
-        .step-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #ddd;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            transition: background 0.3s;
-            margin-bottom: 5px;
-        }
-        .step-text {
-            font-size: 0.85rem;
-            color: #777;
-            text-align: center;
-        }
-        .step.active .step-icon {
-            background: var(--primary-color);
-        }
-        .step.completed .step-icon {
-            background: var(--secondary-color);
-        }
-        input{
-            background: transparent;
-        }
-        select{
-            background: transparent;
-        }
-    </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="{{ url_for('static', filename='jquery/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
@@ -281,8 +102,12 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-6">
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="factory_name_en" name="factory_name_en" value="{{ form_data.get('factory_name_en') if form_data else "" }}" placeholder="প্রতিষ্ঠান/ কারখানার নাম (ইংরেজি)" required>
+                                        <label for="factory_name_en" class="required">প্রতিষ্ঠান/ কারখানার নাম (ইংরেজি)</label>
+                                    </div>
                                     <div class="custom-select w-100">
-                                        <label for="association">প্রতিষ্ঠান/ কারখানার অ্যাসোসিয়েশন*</label>
+                                        <label for="association" class="required">প্রতিষ্ঠান/ কারখানার অ্যাসোসিয়েশন</label>
                                         <select id="association" name="association" class="w-100 select2" required>
                                             <option class="select-items" value="" disabled selected hidden></option>
                                             <option class="select-items" value="BGMEA" {{ "selected" if form_data and form_data.get('association')=="BGMEA" else "" }}>BGMEA</option>
@@ -291,32 +116,67 @@
                                         </select>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="factory_name_en" name="factory_name_en" value="{{ form_data.get('factory_name_en') if form_data else "" }}" required>
-                                        <label for="factory_name_en">প্রতিষ্ঠান/ কারখানার নাম (ইংরেজি)*</label>
+                                        <input type="text" id="group_name" name="group_name" value="{{ form_data.get('group_name') if form_data else "" }}" placeholder="গ্রুপের নাম (যদি থাকে)">
+                                        <label for="group_name">গ্রুপের নাম (যদি থাকে)</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="factory_phone" name="factory_phone" value="{{ form_data.get('factory_phone') if form_data else "" }}">
+                                        <input type="text" id="license_type" name="license_type" value="{{ form_data.get('license_type') if form_data else "" }}" placeholder="লাইসেন্সের ধরণ" required>
+                                        <label for="license_type" class="required">লাইসেন্সের ধরণ</label>
+                                    </div>
+                                    <div class="custom-select w-100">
+                                        <label for="is_lima_registered" class="required">LIMA-তে নিবন্ধন রয়েছে?</label>
+                                        <select id="is_lima_registered" name="is_lima_registered" class="w-100 select2" onchange="changeLimaFields()" required>
+                                            <option class="select-items" value="no" {{ "selected" if form_data and form_data.get('association')=="no" else "" }}>না</option>
+                                            <option class="select-items" value="yes" {{ "selected" if form_data and form_data.get('association')=="yes" else "" }}>হ্যাঁ</option>
+                                        </select>
+                                    </div>
+                                    <div class="custom-input w-100" id="lima_registration_number_div" style="display: none;">
+                                        <input type="text" id="lima_registration_number" name="lima_registration_number" value="{{ form_data.get('lima_registration_number') if form_data else "" }}" placeholder="LIMA নিবন্ধন নম্বর">
+                                        <label for="lima_registration_number" class="required">LIMA নিবন্ধন নম্বর</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="factory_phone" name="factory_phone" value="{{ form_data.get('factory_phone') if form_data else "" }}" placeholder="ফোন নম্বর">
                                         <label for="factory_phone">ফোন নম্বর</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="factory_web" name="factory_web" value="{{ form_data.get('factory_web') if form_data else "" }}" placeholder="ওয়েবসাইট">
+                                        <label for="factory_web">ওয়েবসাইট</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="custom-input w-100">
-                                        <input type="text" id="factory_name_bn" name="factory_name_bn" value="{{ form_data.get('factory_name_bn') if form_data else "" }}" required>
-                                        <label for="factory_name_bn">প্রতিষ্ঠান/ কারখানার নাম (বাংলা)*</label>
+                                        <input type="text" id="factory_name_bn" name="factory_name_bn" value="{{ form_data.get('factory_name_bn') if form_data else "" }}" placeholder="প্রতিষ্ঠান/ কারখানার নাম (বাংলা)" required>
+                                        <label for="factory_name_bn" class="required">প্রতিষ্ঠান/ কারখানার নাম (বাংলা)</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="factory_email" name="factory_email" value="{{ form_data.get('factory_email') if form_data else "" }}">
+                                        <input type="text" id="membership_no" name="membership_no" value="{{ form_data.get('membership_no') if form_data else "" }}" placeholder="এসোসিয়েশন কর্তৃক প্রদত্ত মেম্বারশিপ নম্বর" required>
+                                        <label for="factory_email" class="required">এসোসিয়েশন কর্তৃক প্রদত্ত মেম্বারশিপ নম্বর</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="business_sector" name="business_sector" value="{{ form_data.get('business_sector') if form_data else "" }}" placeholder="ব্যাবসার ধরণ" required>
+                                        <label for="business_sector" class="required">ব্যাবসার ধরণ</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="license_no" name="license_no" value="{{ form_data.get('license_no') if form_data else "" }}" placeholder="লাইসেন্স নম্বর" required>
+                                        <label for="license_no" class="required">লাইসেন্স নম্বর</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="" name="date_of_factory_establishment" class="datepicker" value="{{ form_data.get('date_of_factory_establishment') if form_data else "" }}" placeholder="প্রতিষ্ঠানের প্রতিষ্ঠার তারিখ" required>
+                                        <label for="date_of_factory_establishment" class="required">প্রতিষ্ঠানের প্রতিষ্ঠার তারিখ</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="" name="approximate_number_of_employee" value="{{ form_data.get('approximate_number_of_employee') if form_data else "" }}" placeholder="প্রতিষ্ঠানের কর্মচারীর সংখ্যা" required>
+                                        <label for="approximate_number_of_employee" class="required">প্রতিষ্ঠানের কর্মচারীর সংখ্যা</label>
+                                    </div>
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="factory_email" name="factory_email" value="{{ form_data.get('factory_email') if form_data else "" }}" placeholder="ই-মেইল">
                                         <label for="factory_email">ই-মেইল</label>
-                                    </div>
-                                    <div class="custom-input w-100">
-                                        <input type="text" id="factory_web" name="factory_web" value="{{ form_data.get('factory_web') if form_data else "" }}">
-                                        <label for="factory_web">ওয়েবসাইট</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-12">
-                                    <label for="file_upload" class="form-label fw-bold">কারখানার মেম্বারশিপ সার্টিফিকেট আপলোড করুন * <i class="fas fa-question-circle text-muted ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="মেম্বারশিপ সার্টিফিকেটটি PDF বা JPEG ফরম্যাটে আপলোড করুন।"></i>
+                                    <label for="file_upload" class="form-label fw-bold required">কারখানার মেম্বারশিপ সার্টিফিকেট আপলোড করুন <i class="fas fa-question-circle text-muted ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="মেম্বারশিপ সার্টিফিকেটটি PDF বা JPEG ফরম্যাটে আপলোড করুন।"></i>
                                     </label>
                                     <input type="file" style="display: none;" name="file_upload" id="file-upload" required accept=".pdf, .jpg, .jpeg, .png">
                                     <div class="card mt-2 d-flex flex-row justify-content-center align-items-center file-upload-box" onclick="document.getElementById('file-upload').click();">
@@ -342,13 +202,13 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="custom-input w-100">
-                                        <input type="text" id="factory_address" name="factory_address" value="{{ form_data.get('factory_address') if form_data else "" }}" required>
-                                        <label for="factory_address">গ্রাম/ প্লট/ বাড়ি/ রাস্তা*</label>
+                                        <input type="text" id="factory_address" name="factory_address" value="{{ form_data.get('factory_address') if form_data else "" }}" placeholder="গ্রাম/ প্লট/ বাড়ি/ রাস্তা" required>
+                                        <label for="factory_address" class="required">গ্রাম/ প্লট/ বাড়ি/ রাস্তা</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div class="mb-4">
-                                        <label for="factory_division" class="form-label small text-muted">বিভাগ*</label>
+                                    <div class="mb-4 custom-select">
+                                        <label for="factory_division" class="form-label  required">বিভাগ</label>
                                         <select name="factory_division" id="factory_division"
                                             onchange="loadLocation(this, 'factory_district')"
                                             class="w-100 select2" required>
@@ -361,8 +221,8 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div class="mb-4">
-                                        <label for="factory_district" class="form-label small text-muted">জেলা/সিটি কর্পোরেশন*</label>
+                                    <div class="mb-4 custom-select">
+                                        <label for="factory_district" class="form-label  required">জেলা/সিটি কর্পোরেশন</label>
                                         <select name="factory_district" id="factory_district"
                                             onchange="loadLocation(this, 'factory_thana')"
                                             class="w-100 select2" required>
@@ -370,8 +230,8 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div class="mb-4">
-                                        <label for="factory_thana" class="form-label small text-muted">উপজেলা/থানা/পৌরসভা*</label>
+                                    <div class="mb-4 custom-select">
+                                        <label for="factory_thana" class="form-label  required">উপজেলা/থানা/পৌরসভা</label>
                                         <select name="factory_thana" id="factory_thana"
                                             onchange="loadLocation(this, 'factory_ward')"
                                             class="w-100 select2" required>
@@ -379,9 +239,69 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div class="mb-4">
-                                        <label for="factory_ward" class="form-label small text-muted">ইউনিয়ন/ওয়ার্ড*</label>
+                                    <div class="mb-4 custom-select">
+                                        <label for="factory_ward" class="form-label  required">ইউনিয়ন/ওয়ার্ড</label>
                                         <select name="factory_ward" id="factory_ward"
+                                            onchange="loadLocation(this, '')" class="w-100 select2"
+                                            required>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card mb-4">
+                        <div class="card-header py-3 bg-white">
+                            <span><i class="fas fa-map-marker-alt me-2"></i> অফিসের ঠিকানা</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="custom-input w-100">
+                                        <input type="text" id="office_address" name="office_address" value="{{ form_data.get('office_address') if form_data else "" }}" placeholder="গ্রাম/ প্লট/ বাড়ি/ রাস্তা" required>
+                                        <label for="office_address" class="required">গ্রাম/ প্লট/ বাড়ি/ রাস্তা</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-4 custom-select">
+                                        <label for="office_division" class="form-label  required">বিভাগ</label>
+                                        <select name="office_division" id="office_division"
+                                            onchange="loadLocation(this, 'office_district')"
+                                            class="w-100 select2" required>
+                                            <option value="">নির্বাচন করুন</option>
+                                            {% for location in locations %}
+                                            <option value="{{ location.LocationId }}" {{ "selected" if form_data and form_data.get('office_division') else "" }}>{{
+                                                location.LocationName }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-4 custom-select">
+                                        <label for="office_district" class="form-label  required">জেলা/সিটি কর্পোরেশন</label>
+                                        <select name="office_district" id="office_district"
+                                            onchange="loadLocation(this, 'office_thana')"
+                                            class="w-100 select2" required>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-4 custom-select">
+                                        <label for="office_thana" class="form-label  required">উপজেলা/থানা/পৌরসভা</label>
+                                        <select name="office_thana" id="office_thana"
+                                            onchange="loadLocation(this, 'office_ward')"
+                                            class="w-100 select2" required>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-4 custom-select">
+                                        <label for="office_ward" class="form-label  required">ইউনিয়ন/ওয়ার্ড</label>
+                                        <select name="office_ward" id="office_ward"
                                             onchange="loadLocation(this, '')" class="w-100 select2"
                                             required>
                                         </select>
@@ -404,42 +324,42 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_name" name="representative_name" value="{{ form_data.get('representative_name') if form_data else '' }}" required>
-                                        <label for="representative_name">প্রতিনিধির নাম (ইংরেজি)*</label>
+                                        <input type="text" id="representative_name" name="representative_name" value="{{ form_data.get('representative_name') if form_data else '' }}" placeholder="প্রতিনিধির নাম (ইংরেজি)" required>
+                                        <label for="representative_name" class="required">প্রতিনিধির নাম (ইংরেজি)</label>
                                     </div>
                                     <div class="custom-input w-100">
                                         <input type="text" id="representative_designation"
-                                            name="representative_designation" value="{{ form_data.get('representative_designation') if form_data else '' }}" required>
-                                        <label for="representative_designation">পদবী*</label>
+                                            name="representative_designation" value="{{ form_data.get('representative_designation') if form_data else '' }}" placeholder="পদবী" required>
+                                        <label for="representative_designation" class="required">পদবী</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_email" name="representative_email" value="{{ form_data.get('representative_email') if form_data else '' }}">
+                                        <input type="text" id="representative_email" name="representative_email" value="{{ form_data.get('representative_email') if form_data else '' }}" placeholder="ই-মেইল">
                                         <label for="representative_email">ই-মেইল</label>
                                     </div>
-                                    <div class="custom-input w-100">
+                                    <!-- <div class="custom-input w-100">
                                         <input type="text" id="representative_passport" name="representative_passport" value="{{ form_data.get('representative_passport') if form_data else '' }}">
                                         <label for="representative_passport">পাসপোর্ট নম্বর</label>
+                                    </div> -->
+                                    <div class="custom-input w-100">
+                                        <input type="text" class="datepicker" id="representative_dob" value="{{ form_data.get('representative_dob') if form_data else '' }}" name="representative_dob" placeholder="জন্মতারিখ">
+                                        <label for="representative_dob">জন্মতারিখ</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_name_bn" name="representative_name_bn" value="{{ form_data.get('representative_name_bn') if form_data else '' }}"
+                                        <input type="text" id="representative_name_bn" name="representative_name_bn" value="{{ form_data.get('representative_name_bn') if form_data else '' }}" placeholder="প্রতিনিধির নাম (বাংলা)"
                                             required>
-                                        <label for="representative_name_bn">প্রতিনিধির নাম (বাংলা)*</label>
+                                        <label for="representative_name_bn" class="required">প্রতিনিধির নাম (বাংলা)</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_phone" name="representative_phone" value="{{ form_data.get('representative_phone') if form_data else '' }}" required>
-                                        <label for="representative_phone">ফোন নম্বর (লগইন ইউজারনেম হিসেবে ব্যবহৃত হবে)*</label>
+                                        <input type="text" id="representative_phone" name="representative_phone" value="{{ form_data.get('representative_phone') if form_data else '' }}" placeholder="ফোন নম্বর (লগইন ইউজারনেম হিসেবে ব্যবহৃত হবে)" required>
+                                        <label for="representative_phone" class="required">ফোন নম্বর (লগইন ইউজারনেম হিসেবে ব্যবহৃত হবে)</label>
                                     </div>
                                     <div class="custom-input w-100">
-                                        <input type="text" id="representative_nid" name="representative_nid" value="{{ form_data.get('representative_nid') if form_data else '' }}" required>
-                                        <label for="representative_nid">জাতীয় পরিচয়পত্র নম্বর*</label>
+                                        <input type="text" id="representative_nid" name="representative_nid" value="{{ form_data.get('representative_nid') if form_data else '' }}" placeholder="জাতীয় পরিচয়পত্র নম্বর" required>
+                                        <label for="representative_nid" class="required">জাতীয় পরিচয়পত্র নম্বর</label>
                                     </div>
-                                    <div class="custom-input w-100">
-                                        <input type="text" class="datepicker" id="representative_dob" value="{{ form_data.get('representative_dob') if form_data else '' }}"
-                                            name="representative_dob">
-                                        <label for="representative_dob">জন্মতারিখ</label>
-                                    </div>
+                                    
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -453,13 +373,13 @@
                                                 <div class="col-12">
                                                     <div class="custom-input w-100">
                                                         <input type="text" id="representative_address"
-                                                            name="representative_address" value="{{ form_data.get('representative_address') if form_data else '' }}" required>
-                                                        <label for="representative_address">গ্রাম/ প্লট/ বাড়ি/ রাস্তা*</label>
+                                                            name="representative_address" value="{{ form_data.get('representative_address') if form_data else '' }}" placeholder="গ্রাম/ প্লট/ বাড়ি/ রাস্তা" required>
+                                                        <label for="representative_address" class="required">গ্রাম/ প্লট/ বাড়ি/ রাস্তা</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
-                                                    <div class="mb-4">
-                                                        <label for="representative_division" class="form-label small text-muted">বিভাগ*</label>
+                                                    <div class="mb-4 custom-select">
+                                                        <label for="representative_division" class="form-label  required">বিভাগ</label>
                                                         <select name="representative_division"
                                                             id="representative_division"
                                                             onchange="loadLocation(this, 'representative_district')"
@@ -473,8 +393,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
-                                                    <div class="mb-4">
-                                                        <label for="representative_district" class="form-label small text-muted">জেলা/সিটি কর্পোরেশন*</label>
+                                                    <div class="mb-4 custom-select">
+                                                        <label for="representative_district" class="form-label  required">জেলা/সিটি কর্পোরেশন</label>
                                                         <select name="representative_district"
                                                             id="representative_district"
                                                             onchange="loadLocation(this, 'representative_thana')"
@@ -483,8 +403,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
-                                                    <div class="mb-4">
-                                                        <label for="representative_thana" class="form-label small text-muted">উপজেলা/থানা/পৌরসভা*</label>
+                                                    <div class="mb-4 custom-select">
+                                                        <label for="representative_thana" class="form-label  required">উপজেলা/থানা/পৌরসভা</label>
                                                         <select name="representative_thana" id="representative_thana"
                                                             onchange="loadLocation(this, 'representative_ward')"
                                                             class="w-100 select2" required>
@@ -492,8 +412,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
-                                                    <div class="mb-4">
-                                                        <label for="representative_ward" class="form-label small text-muted">ইউনিয়ন/ওয়ার্ড*</label>
+                                                    <div class="mb-4 custom-select">
+                                                        <label for="representative_ward" class="form-label  required">ইউনিয়ন/ওয়ার্ড</label>
                                                         <select name="representative_ward" id="representative_ward"
                                                             onchange="loadLocation(this, '')" class="w-100 select2"
                                                             required>
@@ -632,6 +552,17 @@
                 previewContainer.appendChild(fileDiv);
             }
         });
+
+        function changeLimaFields() {
+            console.log('LIMA field change triggered');
+            value = $('#is_lima_registered option:selected').val();
+            if (value == 'yes') {
+                $('#lima_registration_number_div').fadeIn("slow");
+            } else {
+                $('#lima_registration_number_div').fadeOut("slow");
+                $('#lima_registration_number').val("");
+            }
+        }
 
         // Location Load Function (Original functionality kept)
         function loadLocation(object, domId) {
