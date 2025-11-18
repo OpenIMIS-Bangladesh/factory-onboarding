@@ -256,7 +256,15 @@
                 <div class="col-md-12">
                     <div class="card mb-4">
                         <div class="card-header py-3 bg-white">
-                            <span><i class="fas fa-map-marker-alt me-2"></i> অফিসের ঠিকানা</span>
+                            <div class="row">
+                                <div class="col-6">
+                                    <span><i class="fas fa-map-marker-alt me-2"></i> অফিসের ঠিকানা</span>
+                                </div>
+                                <div class="col-6">
+                                    <input type="checkbox" style="cursor: pointer;" id="same_as_factory_address" onclick="changeOfficeLocation()">
+                                    <label for="same_as_factory_address" style="font-size: 0.95rem; color: #000;"> ফ্যাক্টরীর ঠিকানার অনুরূপ</label>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -270,7 +278,7 @@
                                     <div class="mb-4 custom-select">
                                         <label for="office_division" class="form-label  required">বিভাগ</label>
                                         <select name="office_division" id="office_division"
-                                            onchange="loadLocation(this, 'office_district')"
+                                            onchange="loadLocation(this, 'office_district'); changeSimilarCheckbox()"
                                             class="w-100 select2" required>
                                             <option value="">নির্বাচন করুন</option>
                                             {% for location in locations %}
@@ -284,7 +292,7 @@
                                     <div class="mb-4 custom-select">
                                         <label for="office_district" class="form-label  required">জেলা/সিটি কর্পোরেশন</label>
                                         <select name="office_district" id="office_district"
-                                            onchange="loadLocation(this, 'office_thana')"
+                                            onchange="loadLocation(this, 'office_thana'); changeSimilarCheckbox()"
                                             class="w-100 select2" required>
                                         </select>
                                     </div>
@@ -293,7 +301,7 @@
                                     <div class="mb-4 custom-select">
                                         <label for="office_thana" class="form-label  required">উপজেলা/থানা/পৌরসভা</label>
                                         <select name="office_thana" id="office_thana"
-                                            onchange="loadLocation(this, 'office_ward')"
+                                            onchange="loadLocation(this, 'office_ward'); changeSimilarCheckbox()"
                                             class="w-100 select2" required>
                                         </select>
                                     </div>
@@ -302,7 +310,7 @@
                                     <div class="mb-4 custom-select">
                                         <label for="office_ward" class="form-label  required">ইউনিয়ন/ওয়ার্ড</label>
                                         <select name="office_ward" id="office_ward"
-                                            onchange="loadLocation(this, '')" class="w-100 select2"
+                                            onchange="loadLocation(this, ''); changeSimilarCheckbox()" class="w-100 select2"
                                             required>
                                         </select>
                                     </div>
@@ -610,6 +618,51 @@
                     //toastr.error('ঠিকানার তথ্য লোড করতে ব্যর্থ: ' + error);
                     console.error('Error fetching locations:', error);
                 });
+        }
+
+        function changeOfficeLocation() {
+            if ($('#same_as_factory_address').is(':checked')) {
+                $('#office_address').val($('#factory_address').val());
+
+                $('#office_division').val($('#factory_division').val()).trigger('change');
+                setTimeout(function () {
+                    $('#office_district').val($('#factory_district').val()).trigger('change');
+                }, 500);
+                setTimeout(function () {
+                    $('#office_thana').val($('#factory_thana').val()).trigger('change');
+                }, 1000);
+                setTimeout(function () {
+                    $('#office_ward').val($('#factory_ward').val()).trigger('change');
+                }, 1500);
+            } else {
+                $('#office_address').val('');
+                $('#office_division').val('').trigger('change');
+                $('#office_district').val('').trigger('change');
+                $('#office_thana').val('').trigger('change');
+                $('#office_ward').val('').trigger('change');
+            }
+        }
+
+        function changeSimilarCheckbox() {
+            let isSame = true;
+
+            if ($('#office_address').val() !== $('#factory_address').val()) {
+                isSame = false;
+            }
+            if ($('#office_division').val() !== $('#factory_division').val()) {
+                isSame = false;
+            }
+            if ($('#office_district').val() !== $('#factory_district').val()) {
+                isSame = false;
+            }
+            if ($('#office_thana').val() !== $('#factory_thana').val()) {
+                isSame = false;
+            }
+            if ($('#office_ward').val() !== $('#factory_ward').val()) {
+                isSame = false;
+            }
+
+            $('#same_as_factory_address').prop('checked', isSame);
         }
     </script>
 </body>
